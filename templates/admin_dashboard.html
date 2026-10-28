@@ -1,0 +1,1637 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Админ удирдлагын систем | Их Засаг Политехник Коллеж{% endblock %}
+
+{% block content %}
+<style>
+    .adm { padding: 40px 0 80px; position: relative; z-index: 2; }
+    .adm-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+    .adm-top h1 { margin: 0; font-size: 24px; color: #ffffff; display: flex; align-items: center; gap: 10px; }
+    .adm-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    
+    .adm-btn {
+        display: inline-flex; align-items: center; gap: 7px; padding: 10px 16px; border-radius: 9px;
+        font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-size: 13.5px;
+        transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .adm-btn:hover { transform: translateY(-2px); }
+    
+    .adm-btn-add { background: linear-gradient(135deg, #e7b95e, #c49438); color: #0f172a; box-shadow: 0 4px 14px rgba(231,185,94,0.3); }
+    .adm-btn-add:hover { background: #f5d995; }
+    
+    .adm-btn-excel { background: #10b981; color: #ffffff; box-shadow: 0 4px 14px rgba(16,185,129,0.3); }
+    .adm-btn-excel:hover { background: #059669; }
+    
+    .adm-btn-del-bulk { background: #dc2626; color: #ffffff; opacity: 0.6; cursor: not-allowed; }
+    .adm-btn-del-bulk.active { opacity: 1; cursor: pointer; box-shadow: 0 4px 14px rgba(220,38,38,0.4); }
+    .adm-btn-del-bulk.active:hover { background: #b91c1c; }
+    
+    .adm-btn-clear { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .adm-btn-clear:hover { background: rgba(239, 68, 68, 0.3); color: #ffffff; }
+
+    .adm-btn-logout { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; }
+    .adm-btn-logout:hover { background: rgba(255, 255, 255, 0.18); }
+    
+    .adm-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+    .adm-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(231,185,94,0.3); padding: 14px 20px; border-radius: 12px; backdrop-filter: blur(8px); min-width: 140px; }
+    .adm-stat b { display: block; font-size: 24px; color: #e7b95e; line-height: 1.2; }
+    .adm-stat span { font-size: 12.5px; color: #cfc8ff; }
+
+    .adm-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+    .adm-search {
+        width: 100%; max-width: 340px; padding: 10px 16px; border-radius: 50px;
+        border: 1px solid rgba(220,214,255,0.25); background: rgba(255,255,255,0.06);
+        color: #ffffff; font-size: 14px; outline: none; backdrop-filter: blur(8px);
+    }
+    .adm-search::placeholder { color: #94a3b8; }
+
+    .adm-table-box {
+        background: #ffffff; color: #1e293b; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.35); overflow-x: auto;
+    }
+    .adm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    .adm-table th { background: #0f172a; color: #f8fafc; padding: 13px 15px; font-weight: 600; white-space: nowrap; }
+    .adm-table td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+    .adm-table tr:hover td { background: #f8fafc; }
+    
+    .adm-badge-major {
+        display: inline-block; padding: 3px 10px; border-radius: 50px;
+        background: #eef2ff; color: #4338ca; font-size: 12px; font-weight: 600;
+    }
+    .adm-badge-gender {
+        display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600;
+    }
+    .adm-badge-gender.m { background: #e0f2fe; color: #0369a1; }
+    .adm-badge-gender.f { background: #fce7f3; color: #be185d; }
+
+    .status-badge {
+        display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 11.5px; font-weight: 700;
+    }
+    .status-new { background: #fef3c7; color: #92400e; }
+    .status-contacted { background: #dbeafe; color: #1e40af; }
+    .status-confirmed { background: #dcfce7; color: #166534; }
+    .status-rejected { background: #fee2e2; color: #991b1b; }
+
+    .row-actions { display: flex; gap: 6px; align-items: center; }
+    .adm-btn-edit {
+        background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+        padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
+        transition: 0.2s;
+    }
+    .adm-btn-edit:hover { background: #e2e8f0; color: #0f172a; }
+    
+    .adm-del {
+        background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+        padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
+        transition: 0.2s;
+    }
+    .adm-del:hover { background: #fca5a5; }
+
+    /* TABS */
+    .adm-tabs-nav {
+        display: flex; gap: 10px; margin-bottom: 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding-bottom: 14px; align-items: center; flex-wrap: wrap;
+    }
+    .adm-tab-btn {
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #cfc8ff; padding: 10px 16px; border-radius: 11px; font-size: 13.5px; font-weight: 700;
+        cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;
+    }
+    .adm-tab-btn:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
+    .adm-tab-btn.active {
+        background: linear-gradient(135deg, rgba(124, 108, 246, 0.45), rgba(91, 79, 214, 0.7));
+        border-color: #a99fff; color: #ffffff; box-shadow: 0 4px 18px rgba(124, 108, 246, 0.35);
+    }
+    .tab-badge {
+        display: inline-flex; align-items: center; justify-content: center; padding: 2px 7px;
+        border-radius: 50px; font-size: 11.5px; font-weight: 800; background: rgba(255, 255, 255, 0.16); color: #ffffff;
+    }
+    .adm-tab-btn.active .tab-badge { background: #ffffff; color: #4338ca; }
+
+    /* NEWS & DEPT BADGES */
+    .news-category-badge {
+        display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 11.5px; font-weight: 700;
+    }
+    .cat-elselt { background: #e0e7ff; color: #3730a3; }
+    .cat-tetgeleg { background: #fef3c7; color: #92400e; }
+    .cat-olonuls { background: #dbeafe; color: #1e40af; }
+    .cat-oyutan { background: #dcfce7; color: #166534; }
+    .cat-zarlel { background: #f3e8ff; color: #6b21a8; }
+
+    /* SETTINGS CARD */
+    .settings-card {
+        background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.18);
+        border-radius: 18px; padding: 28px; backdrop-filter: blur(10px); margin-bottom: 24px;
+    }
+    .settings-card h3 {
+        margin: 0 0 16px; color: #e7b95e; font-size: 17px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;
+    }
+    .settings-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;
+    }
+    .settings-field label {
+        display: block; font-size: 13px; font-weight: 600; color: #cfc8ff; margin-bottom: 6px;
+    }
+    .settings-field input, .settings-field textarea {
+        width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(220,214,255,0.22);
+        background: rgba(255,255,255,0.06); color: #ffffff; font-size: 14px; box-sizing: border-box; outline: none;
+    }
+    .settings-field input:focus, .settings-field textarea:focus {
+        border-color: #a99fff; background: rgba(255,255,255,0.1);
+    }
+</style>
+
+<section class="container adm">
+    <!-- ТАБ ХООРОНД ШИЛЖИХ УДИРДЛАГЫН ЦЭС -->
+    <div class="adm-tabs-nav">
+        <button type="button" id="tabBtn_apps" class="adm-tab-btn active" onclick="switchTab('apps')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+            Элсэлт <span class="tab-badge">{{ applications|length }}</span>
+        </button>
+        <button type="button" id="tabBtn_teachers" class="adm-tab-btn" onclick="switchTab('teachers')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Багш, удирдлага <span class="tab-badge">{{ teachers|length }}</span>
+        </button>
+        <button type="button" id="tabBtn_majors" class="adm-tab-btn" onclick="switchTab('majors')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Мэргэжлүүд <span class="tab-badge">{{ majors|length }}</span>
+        </button>
+        <button type="button" id="tabBtn_news" class="adm-tab-btn" onclick="switchTab('news')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Мэдээ, зарлал <span class="tab-badge">{{ news_list|length }}</span>
+        </button>
+        <button type="button" id="tabBtn_faqs" class="adm-tab-btn" onclick="switchTab('faqs')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Асуулт (FAQ) <span class="tab-badge">{{ faqs|length }}</span>
+        </button>
+        <button type="button" id="tabBtn_settings" class="adm-tab-btn" onclick="switchTab('settings')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Сайтын тохиргоо
+        </button>
+
+        <div style="margin-left: auto; display: flex; gap: 8px;">
+            <a class="adm-btn adm-btn-logout" href="{{ url_for('home') }}" target="_blank">Сайт харах ↗</a>
+            <a class="adm-btn adm-btn-logout" href="{{ url_for('admin_logout') }}">Гарах</a>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 1: ЭЛСЭЛТИЙН БҮРТГЭЛҮҮД -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_apps" class="adm-tab-pane">
+        <div class="adm-top">
+            <h1>Элсэлтийн бүртгэлийн удирдлага</h1>
+            <div class="adm-actions">
+                <button type="button" class="adm-btn adm-btn-add" onclick="openAddModal()">+ Шинэ бүртгэл нэмэх</button>
+                <a class="adm-btn adm-btn-excel" href="{{ url_for('admin_export') }}">Excel / CSV татах</a>
+                <button type="button" id="btnBulkDelete" class="adm-btn adm-btn-del-bulk" onclick="submitBulkDelete()" disabled>
+                    Сонгосныг устгах (<span id="selectedCount">0</span>)
+                </button>
+                {% if applications|length > 0 %}
+                <form method="post" action="{{ url_for('admin_clear_all') }}" style="display:inline;"
+                      onsubmit="return confirm('АНХААРУУЛГА: Та бүх бүртгэлийг устгах гэж байна! Үргэлжлүүлэх үү?');">
+                    <button type="submit" class="adm-btn adm-btn-clear">Бүгдийг цэвэрлэх</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="adm-controls">
+            <div class="adm-stats" style="margin-bottom: 0;">
+                <div class="adm-stat">
+                    <b>{{ applications|length }}</b>
+                    <span>Нийт элсэгч</span>
+                </div>
+                <div class="adm-stat" style="border-color: rgba(16, 185, 129, 0.35);">
+                    <b style="color: #34d399;">{{ applications|selectattr('status', 'equalto', 'Баталгаажсан')|list|length }}</b>
+                    <span>Баталгаажсан</span>
+                </div>
+                <div class="adm-stat" style="border-color: rgba(59, 130, 246, 0.35);">
+                    <b style="color: #60a5fa;">{{ applications|selectattr('status', 'equalto', 'Холбогдсон')|list|length }}</b>
+                    <span>Холбогдсон</span>
+                </div>
+            </div>
+            <input type="text" id="admSearch" class="adm-search" placeholder="Нэр, утас, мэргэжлээр хайх...">
+        </div>
+
+        <form id="bulkDeleteForm" method="post" action="{{ url_for('admin_delete_selected') }}">
+            <div class="adm-table-box">
+                <table class="adm-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 36px; text-align: center;">
+                                <input type="checkbox" id="checkAll" onchange="toggleSelectAll(this)" title="Бүгдийг сонгох">
+                            </th>
+                            <th>#</th>
+                            <th>Овог, нэр</th>
+                            <th>Төрсөн огноо</th>
+                            <th>Хүйс</th>
+                            <th>Мэргэжил</th>
+                            <th>Утас</th>
+                            <th>Төлөв</th>
+                            <th>Тэмдэглэл</th>
+                            <th>Огноо</th>
+                            <th style="text-align: right;">Үйлдлүүд</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admRows">
+                    {% for a in applications %}
+                        <tr>
+                            <td style="text-align: center;">
+                                <input type="checkbox" name="selected_ids" value="{{ a.id }}" class="row-checkbox" onchange="updateSelectedCount()">
+                            </td>
+                            <td><b>{{ a.id }}</b></td>
+                            <td style="font-weight: 700; color: #0f172a;">{{ a.fullname }}</td>
+                            <td>{{ a.birthdate }}</td>
+                            <td>
+                                {% if a.gender == 'эр' or a.gender == 'эрэгтэй' %}
+                                    <span class="adm-badge-gender m">Эр</span>
+                                {% else %}
+                                    <span class="adm-badge-gender f">Эм</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="adm-badge-major">{{ a.major }}</span></td>
+                            <td><a href="tel:{{ a.phone }}" style="color: #0369a1; text-decoration: none; font-weight: 700;">{{ a.phone }}</a></td>
+                            <td>
+                                {% set st = a.status or 'Шинэ' %}
+                                {% if st == 'Баталгаажсан' %}
+                                    <span class="status-badge status-confirmed">{{ st }}</span>
+                                {% elif st == 'Холбогдсон' %}
+                                    <span class="status-badge status-contacted">{{ st }}</span>
+                                {% elif st == 'Татгалзсан' %}
+                                    <span class="status-badge status-rejected">{{ st }}</span>
+                                {% else %}
+                                    <span class="status-badge status-new">{{ st }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="max-width: 160px; font-size: 12px; color: #475569;">{{ a.notes or '-' }}</td>
+                            <td style="font-size: 12px; color: #64748b; white-space: nowrap;">{{ a.created_at[:16] if a.created_at else '' }}</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <div class="row-actions" style="justify-content: flex-end;">
+                                    <button type="button" class="adm-btn-edit"
+                                            data-id="{{ a.id }}"
+                                            data-fullname="{{ a.fullname }}"
+                                            data-birthdate="{{ a.birthdate }}"
+                                            data-gender="{{ a.gender }}"
+                                            data-major="{{ a.major }}"
+                                            data-phone="{{ a.phone }}"
+                                            data-status="{{ a.status or 'Шинэ' }}"
+                                            data-notes="{{ a.notes or '' }}"
+                                            onclick="openEditModal(this)">
+                                        Засах
+                                    </button>
+                                    <button type="button" class="adm-del"
+                                            data-url="{{ url_for('delete_application', id=a.id) }}"
+                                            data-title="{{ a.fullname }}"
+                                            onclick="deleteSingle(this)">
+                                        Устгах
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11" style="text-align: center; padding: 45px 20px; color: #94a3b8;">
+                                Одоогоор элсэлтийн бүртгэл байхгүй байна.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 2: БАГШ, УДИРДЛАГЫН УДИРДЛАГА -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_teachers" class="adm-tab-pane" style="display: none;">
+        <div class="adm-top">
+            <h1>Удирдлага болон Багш ажилчдын удирдлага</h1>
+            <div class="adm-actions">
+                <button type="button" class="adm-btn adm-btn-add" onclick="openAddTeacherModal()">+ Шинэ багш нэмэх</button>
+                <a class="adm-btn adm-btn-excel" href="{{ url_for('about') }}#team-section" target="_blank">Сайт дээр харах ↗</a>
+            </div>
+        </div>
+
+        <div class="adm-controls">
+            <div class="adm-stats" style="margin-bottom: 0;">
+                <div class="adm-stat">
+                    <b>{{ teachers|length }}</b>
+                    <span>Нийт багш, удирдлага</span>
+                </div>
+            </div>
+            <input type="text" id="admTeacherSearch" class="adm-search" placeholder="Багшийн нэр, албан тушаал, тэнхимээр хайх...">
+        </div>
+
+        <div class="adm-table-box">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px; text-align: center;">Зураг</th>
+                        <th>#</th>
+                        <th>Овог, нэр</th>
+                        <th>Албан тушаал & Зэрэг цол</th>
+                        <th>Тэнхим / Алба</th>
+                        <th>Туршлага</th>
+                        <th>Холбоо барих</th>
+                        <th style="text-align: right;">Үйлдлүүд</th>
+                    </tr>
+                </thead>
+                <tbody id="admTeacherRows">
+                {% for t in teachers %}
+                    <tr>
+                        <td style="text-align: center;">
+                            {% if t.photo %}
+                                <img src="{{ t.photo }}" alt="{{ t.name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #e7b95e;">
+                            {% else %}
+                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #1e293b; color: #cfc8ff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
+                                    {{ t.name[:1] }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td><b>{{ t.id }}</b></td>
+                        <td style="font-weight: 700; color: #0f172a;">{{ t.name }}</td>
+                        <td>
+                            <div style="font-weight: 600; color: #1e293b;">{{ t.role }}</div>
+                            <div style="font-size: 12px; color: #64748b;">{{ t.degree }}</div>
+                        </td>
+                        <td><span class="adm-badge-major">{{ t.department }}</span></td>
+                        <td><span style="font-weight: 600; color: #0f172a;">{{ t.experience_years }}</span></td>
+                        <td style="font-size: 12.5px; color: #475569;">
+                            {% if t.email %}<div>{{ t.email }}</div>{% endif %}
+                            {% if t.phone %}<div>{{ t.phone }}</div>{% endif %}
+                        </td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <div class="row-actions" style="justify-content: flex-end;">
+                                <button type="button" class="adm-btn-edit"
+                                        data-id="{{ t.id }}"
+                                        data-name="{{ t.name }}"
+                                        data-role="{{ t.role }}"
+                                        data-degree="{{ t.degree or '' }}"
+                                        data-department="{{ t.department or 'Мэргэжлийн тэнхим' }}"
+                                        data-exp="{{ t.experience_years or '' }}"
+                                        data-bio="{{ t.bio or '' }}"
+                                        data-email="{{ t.email or '' }}"
+                                        data-phone="{{ t.phone or '' }}"
+                                        data-photo="{{ t.photo or '' }}"
+                                        onclick="openEditTeacherModal(this)">
+                                    Засах
+                                </button>
+                                <button type="button" class="adm-del"
+                                        data-url="{{ url_for('admin_delete_teacher', id=t.id) }}"
+                                        data-title="{{ t.name }}"
+                                        onclick="deleteSingle(this)">
+                                    Устгах
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">Одоогоор багшийн мэдээлэл алга байна.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 3: МЭРГЭЖИЛ, ХӨТӨЛБӨРИЙН УДИРДЛАГА -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_majors" class="adm-tab-pane" style="display: none;">
+        <div class="adm-top">
+            <h1>Сургалтын мэргэжил, хөтөлбөрүүдийн удирдлага</h1>
+            <div class="adm-actions">
+                <button type="button" class="adm-btn adm-btn-add" onclick="openAddMajorModal()">+ Шинэ мэргэжил нэмэх</button>
+                <a class="adm-btn adm-btn-excel" href="{{ url_for('students') }}" target="_blank">Сайт дээр харах ↗</a>
+            </div>
+        </div>
+
+        <div class="adm-controls">
+            <div class="adm-stats" style="margin-bottom: 0;">
+                <div class="adm-stat">
+                    <b>{{ majors|length }}</b>
+                    <span>Нийт хөтөлбөр</span>
+                </div>
+            </div>
+            <input type="text" id="admMajorSearch" class="adm-search" placeholder="Мэргэжил хайх...">
+        </div>
+
+        <div class="adm-table-box">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Мэргэжлийн нэр</th>
+                        <th>Салбар</th>
+                        <th>Хугацаа</th>
+                        <th>Суурь боловсрол</th>
+                        <th>Тэтгэлэг / Дэмжлэг</th>
+                        <th>Онцлох</th>
+                        <th style="text-align: right;">Үйлдлүүд</th>
+                    </tr>
+                </thead>
+                <tbody id="admMajorRows">
+                {% for m in majors %}
+                    <tr>
+                        <td><b>{{ m.id }}</b></td>
+                        <td>
+                            <div style="font-weight: 700; color: #0f172a;">{{ m.name }}</div>
+                            <div style="font-size: 12px; color: #64748b; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ m.description }}</div>
+                        </td>
+                        <td><span class="adm-badge-major">{{ m.category_label }}</span></td>
+                        <td style="font-weight: 600;">{{ m.duration }}</td>
+                        <td>{{ m.base_edu }}</td>
+                        <td><span style="color: #065f46; background: #d1fae5; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">{{ m.stipend }}</span></td>
+                        <td>
+                            {% if m.featured %}
+                                <span style="background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700;">Нүүрэнд</span>
+                            {% else %}
+                                <span style="color: #94a3b8; font-size: 12px;">Энгийн</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <div class="row-actions" style="justify-content: flex-end;">
+                                <button type="button" class="adm-btn-edit"
+                                        data-id="{{ m.id }}"
+                                        data-name="{{ m.name }}"
+                                        data-category="{{ m.category }}"
+                                        data-duration="{{ m.duration }}"
+                                        data-base="{{ m.base_edu }}"
+                                        data-stipend="{{ m.stipend }}"
+                                        data-diploma="{{ m.diploma }}"
+                                        data-pathway="{{ m.pathway }}"
+                                        data-description="{{ m.description }}"
+                                        data-career="{{ m.career or '' }}"
+                                        data-featured="{{ m.featured }}"
+                                        onclick="openEditMajorModal(this)">
+                                    Засах
+                                </button>
+                                <button type="button" class="adm-del"
+                                        data-url="{{ url_for('admin_delete_major', id=m.id) }}"
+                                        data-title="{{ m.name }}"
+                                        onclick="deleteSingle(this)">
+                                    Устгах
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">Мэргэжил бүртгэгдээгүй байна.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 4: МЭДЭЭ, ЗАРЛАЛЫН УДИРДЛАГА -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_news" class="adm-tab-pane" style="display: none;">
+        <div class="adm-top">
+            <h1>Сургуулийн мэдээ, зарлалын удирдлага</h1>
+            <div class="adm-actions">
+                <button type="button" class="adm-btn adm-btn-add" onclick="openAddNewsModal()">+ Шинэ мэдээ нийтлэх</button>
+                <a class="adm-btn adm-btn-excel" href="{{ url_for('home') }}#news-section" target="_blank">Сайт дээр харах ↗</a>
+            </div>
+        </div>
+
+        <div class="adm-controls">
+            <div class="adm-stats" style="margin-bottom: 0;">
+                <div class="adm-stat">
+                    <b>{{ news_list|length }}</b>
+                    <span>Нийт мэдээ, зарлал</span>
+                </div>
+            </div>
+            <input type="text" id="admNewsSearch" class="adm-search" placeholder="Мэдээ хайх...">
+        </div>
+
+        <div class="adm-table-box">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px; text-align: center;">Зураг</th>
+                        <th style="width: 45px;">#</th>
+                        <th>Гарчиг</th>
+                        <th>Ангилал</th>
+                        <th>Товч агуулга</th>
+                        <th>Нийтлэгдсэн</th>
+                        <th style="text-align: right; width: 150px;">Үйлдлүүд</th>
+                    </tr>
+                </thead>
+                <tbody id="admNewsRows">
+                {% for n in news_list %}
+                    <tr>
+                        <td style="text-align: center;">
+                            {% if n.image %}
+                                <img src="{{ n.image }}" alt="{{ n.title }}" style="width: 52px; height: 36px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; display: inline-block;">
+                            {% else %}
+                                <div style="width: 52px; height: 36px; background: #e2e8f0; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; color: #64748b;">Зураггүй</div>
+                            {% endif %}
+                        </td>
+                        <td><b>{{ n.id }}</b></td>
+                        <td style="font-weight: 700; color: #0f172a; max-width: 260px;">{{ n.title }}</td>
+                        <td>
+                            {% if n.category == 'Элсэлт' %}
+                                <span class="news-category-badge cat-elselt">{{ n.category }}</span>
+                            {% elif n.category == 'Тэтгэлэг' %}
+                                <span class="news-category-badge cat-tetgeleg">{{ n.category }}</span>
+                            {% elif n.category == 'Олон улс' %}
+                                <span class="news-category-badge cat-olonuls">{{ n.category }}</span>
+                            {% elif n.category == 'Оюутны амьдрал' %}
+                                <span class="news-category-badge cat-oyutan">{{ n.category }}</span>
+                            {% else %}
+                                <span class="news-category-badge cat-zarlel">{{ n.category }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="max-width: 300px; font-size: 13px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ n.summary }}">
+                            {{ n.summary }}
+                        </td>
+                        <td style="font-size: 12px; color: #64748b; white-space: nowrap;">{{ n.created_at[:16] if n.created_at else '' }}</td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <div class="row-actions" style="justify-content: flex-end;">
+                                <button type="button" class="adm-btn-edit"
+                                        data-id="{{ n.id }}"
+                                        data-title="{{ n.title }}"
+                                        data-category="{{ n.category }}"
+                                        data-image="{{ n.image or '' }}"
+                                        data-summary="{{ n.summary }}"
+                                        data-content="{{ n.content or n.summary }}"
+                                        onclick="openEditNewsModal(this)">
+                                    Засах
+                                </button>
+                                <button type="button" class="adm-del"
+                                        data-url="{{ url_for('admin_delete_news', id=n.id) }}"
+                                        data-title="{{ n.title }}"
+                                        onclick="deleteSingle(this)">
+                                    Устгах
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">Нийтлэгдсэн мэдээ алга байна.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 5: ТҮГЭЭМЭЛ АСУУЛТ ХАРИУЛТ (FAQ) -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_faqs" class="adm-tab-pane" style="display: none;">
+        <div class="adm-top">
+            <h1>Түгээмэл асуулт, хариултын удирдлага (FAQ)</h1>
+            <div class="adm-actions">
+                <button type="button" class="adm-btn adm-btn-add" onclick="openAddFaqModal()">+ Шинэ асуулт нэмэх</button>
+                <a class="adm-btn adm-btn-excel" href="{{ url_for('home') }}#faq-section" target="_blank">Сайт дээр харах ↗</a>
+            </div>
+        </div>
+
+        <div class="adm-table-box">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th style="width: 35%;">Асуулт</th>
+                        <th>Хариулт</th>
+                        <th style="text-align: right; width: 150px;">Үйлдлүүд</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for f in faqs %}
+                    <tr>
+                        <td><b>{{ f.id }}</b></td>
+                        <td style="font-weight: 700; color: #0f172a;">{{ f.question }}</td>
+                        <td style="font-size: 13px; color: #475569; line-height: 1.5;">{{ f.answer }}</td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <div class="row-actions" style="justify-content: flex-end;">
+                                <button type="button" class="adm-btn-edit"
+                                        data-id="{{ f.id }}"
+                                        data-question="{{ f.question }}"
+                                        data-answer="{{ f.answer }}"
+                                        onclick="openEditFaqModal(this)">
+                                    Засах
+                                </button>
+                                <button type="button" class="adm-del"
+                                        data-url="{{ url_for('admin_delete_faq', id=f.id) }}"
+                                        data-title="{{ f.question }}"
+                                        onclick="deleteSingle(this)">
+                                    Устгах
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px; color: #94a3b8;">Түгээмэл асуулт бүртгэгдээгүй байна.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ТАБ 6: САЙТЫН ЕРӨНХИЙ ТОХИРГОО БА СТАТИСТИК -->
+    <!-- ========================================================================= -->
+    <div id="tabContent_settings" class="adm-tab-pane" style="display: none;">
+        <div class="adm-top">
+            <h1>Сайтын ерөнхий мэдээлэл ба Статистик тохиргоо</h1>
+        </div>
+
+        <form action="{{ url_for('admin_save_settings') }}" method="post">
+            <!-- 1. Элсэлт ба Статистик -->
+            <div class="settings-card">
+                <h3>1. Элсэлтийн мэдээлэл ба Нүүр хуудасны статистик тоонууд</h3>
+                <div class="settings-grid">
+                    <div class="settings-field">
+                        <label>Хичээлийн жил</label>
+                        <input type="text" name="academic_year" value="{{ site_settings.academic_year }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Элсэлтийн төлөв</label>
+                        <input type="text" name="admission_status" value="{{ site_settings.admission_status }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Сар бүрийн тэтгэлгийн хэмжээ</label>
+                        <input type="text" name="stipend_amount" value="{{ site_settings.stipend_amount }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Суралцах мэргэжлийн тоо</label>
+                        <input type="text" name="stat_majors" value="{{ site_settings.stat_majors }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Нийт оюутны тоо</label>
+                        <input type="text" name="stat_students" value="{{ site_settings.stat_students }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Багш, ажилчдын тоо</label>
+                        <input type="text" name="stat_teachers" value="{{ site_settings.stat_teachers }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Төгсөгчдийн ажил эрхлэлтийн хувь</label>
+                        <input type="text" name="stat_employment" value="{{ site_settings.stat_employment }}" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Холбоо барих мэдээлэл -->
+            <div class="settings-card">
+                <h3>2. Сургуулийн хаяг, Холбоо барих мэдээлэл (Бүх хуудсанд харагдана)</h3>
+                <div class="settings-grid">
+                    <div class="settings-field">
+                        <label>Утасны дугаар 1</label>
+                        <input type="text" name="phone_1" value="{{ site_settings.phone_1 }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Утасны дугаар 2</label>
+                        <input type="text" name="phone_2" value="{{ site_settings.phone_2 }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Албан ёсны и-мэйл</label>
+                        <input type="email" name="email" value="{{ site_settings.email }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Ажиллах цагийн хуваарь</label>
+                        <input type="text" name="work_hours" value="{{ site_settings.work_hours }}" required>
+                    </div>
+                    <div class="settings-field" style="grid-column: 1 / -1;">
+                        <label>Сургуулийн байршил, дэлгэрэнгүй хаяг</label>
+                        <input type="text" name="address" value="{{ site_settings.address }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Facebook хуудасны холбоос</label>
+                        <input type="url" name="facebook_url" value="{{ site_settings.facebook_url }}">
+                    </div>
+                    <div class="settings-field">
+                        <label>Их Засаг ОУИС вэбсайт холбоос</label>
+                        <input type="url" name="website_url" value="{{ site_settings.website_url }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Захирлын мэндчилгээ -->
+            <div class="settings-card">
+                <h3>3. Удирдлагын мэндчилгээ (Бидний тухай хуудсанд харагдана)</h3>
+                <div class="settings-grid">
+                    <div class="settings-field">
+                        <label>Захирлын овог, нэр</label>
+                        <input type="text" name="director_name" value="{{ site_settings.director_name }}" required>
+                    </div>
+                    <div class="settings-field">
+                        <label>Эрдмийн зэрэг, цол</label>
+                        <input type="text" name="director_title" value="{{ site_settings.director_title }}" required>
+                    </div>
+                    <div class="settings-field" style="grid-column: 1 / -1;">
+                        <label>Мэндчилгээний үг</label>
+                        <textarea name="director_quote" rows="4" required>{{ site_settings.director_quote }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="submit" class="adm-btn adm-btn-add" style="padding: 13px 28px; font-size: 15px;">
+                    Тохиргоог хадгалах
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- ДАНГААР УСТГАХ НУУЦ FORM -->
+<form id="singleDeleteForm" method="post" action="" style="display:none;"></form>
+{% endblock %}
+
+{% block modal %}
+<style>
+    .modal-backdrop {
+        position: fixed; inset: 0; width: 100vw; height: 100vh;
+        background: rgba(4, 5, 18, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        display: none; align-items: center; justify-content: center;
+        z-index: 999999 !important; padding: 20px; box-sizing: border-box;
+    }
+    .modal-box {
+        background: linear-gradient(145deg, #121929 0%, #0a0f1d 100%);
+        color: #f8fafc; border: 1px solid rgba(231, 185, 94, 0.4); border-radius: 20px;
+        width: 100%; max-width: 600px; max-height: calc(100vh - 50px);
+        display: flex; flex-direction: column;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.85), 0 0 35px rgba(124, 108, 246, 0.25);
+        position: relative; animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalFadeIn {
+        from { opacity: 0; transform: scale(0.95) translateY(12px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-header {
+        padding: 18px 26px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .modal-header h3 { margin: 0; font-size: 18px; color: #ffffff; font-weight: 700; }
+    .modal-close-icon {
+        background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #cfc8ff; width: 32px; height: 32px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;
+    }
+    .modal-close-icon:hover { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .modal-body { padding: 18px 26px; overflow-y: auto; flex: 1; }
+    .modal-body label { display: block; font-size: 13px; font-weight: 600; color: #cfc8ff; margin-top: 12px; margin-bottom: 5px; }
+    .modal-body label:first-child { margin-top: 0; }
+    .modal-body input, .modal-body select, .modal-body textarea {
+        width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(220, 214, 255, 0.22); border-radius: 10px;
+        font-size: 14px; color: #ffffff; box-sizing: border-box; outline: none;
+    }
+    .modal-body select option { background: #0f172a; color: #ffffff; }
+    .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
+        border-color: #7c6cf6; background: rgba(255, 255, 255, 0.09);
+    }
+    .modal-footer {
+        padding: 14px 26px 18px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex; justify-content: flex-end; gap: 12px; flex-shrink: 0; background: rgba(8, 12, 24, 0.75);
+    }
+    .modal-btn-cancel {
+        background: rgba(255, 255, 255, 0.06); color: #cfc8ff; border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 9px 18px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 13.5px;
+    }
+    .modal-btn-submit {
+        background: linear-gradient(135deg, #9d93ff 0%, #7a6ff0 50%, #5b4fd6 100%);
+        color: #ffffff; border: 1px solid rgba(220, 214, 255, 0.35);
+        padding: 9px 22px; border-radius: 9px; cursor: pointer; font-weight: 700; font-size: 13.5px;
+    }
+</style>
+
+<!-- 1. ШИНЭ ЭЛСЭГЧ НЭМЭХ MODAL -->
+<div id="addModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'addModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Шинэ элсэгчийн бүртгэл нэмэх</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('addModal')">×</button>
+        </div>
+        <form action="{{ url_for('admin_add_application') }}" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Овог, нэр <span style="color:#e7b95e">*</span></label>
+                <input type="text" name="fullname" placeholder="Жишээ: Бат овогтой Болд" required>
+
+                <label>Төрсөн огноо <span style="color:#e7b95e">*</span></label>
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px;">
+                    <select id="add_year" name="birth_year" required></select>
+                    <select id="add_month" name="birth_month" required>
+                        <option value="">Сар</option>
+                        {% for m in range(1, 13) %}
+                        <option value="{{ '%02d' % m }}">{{ m }} сар</option>
+                        {% endfor %}
+                    </select>
+                    <select id="add_day" name="birth_day" required></select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Хүйс <span style="color:#e7b95e">*</span></label>
+                        <select name="gender" required>
+                            <option value="эр">Эрэгтэй</option>
+                            <option value="эм">Эмэгтэй</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Бүртгэлийн төлөв</label>
+                        <select name="status">
+                            <option value="Шинэ">Шинэ</option>
+                            <option value="Холбогдсон">Холбогдсон</option>
+                            <option value="Баталгаажсан">Баталгаажсан</option>
+                            <option value="Татгалзсан">Татгалзсан</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Элсэх мэргэжил <span style="color:#e7b95e">*</span></label>
+                <select name="major" required>
+                    <option value="">Мэргэжлээ сонгоно уу</option>
+                    {% for m in majors %}
+                    <option value="{{ m.name }}">{{ m.name }} ({{ m.duration }})</option>
+                    {% endfor %}
+                </select>
+
+                <label>Холбоо барих утас (8 оронтой) <span style="color:#e7b95e">*</span></label>
+                <input type="tel" name="phone" placeholder="Жишээ: 99112233" pattern="[0-9]{8}" required>
+
+                <label>Тэмдэглэл (Заавал биш)</label>
+                <input type="text" name="notes" placeholder="Дотуур байр сонирхсон, гэрээ хийх өдөр г.м...">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('addModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 2. ЭЛСЭГЧ ЗАСАХ MODAL -->
+<div id="editModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'editModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Бүртгэл засах (<span id="edit_id_label" style="color:#e7b95e;"></span>)</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('editModal')">×</button>
+        </div>
+        <form id="editForm" action="" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Овог, нэр <span style="color:#e7b95e">*</span></label>
+                <input type="text" id="edit_fullname" name="fullname" required>
+
+                <label>Төрсөн огноо <span style="color:#e7b95e">*</span></label>
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px;">
+                    <select id="edit_year" name="birth_year" required></select>
+                    <select id="edit_month" name="birth_month" required>
+                        <option value="">Сар</option>
+                        {% for m in range(1, 13) %}
+                        <option value="{{ '%02d' % m }}">{{ m }} сар</option>
+                        {% endfor %}
+                    </select>
+                    <select id="edit_day" name="birth_day" required></select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Хүйс <span style="color:#e7b95e">*</span></label>
+                        <select id="edit_gender" name="gender" required>
+                            <option value="эр">Эрэгтэй</option>
+                            <option value="эм">Эмэгтэй</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Бүртгэлийн төлөв</label>
+                        <select id="edit_status" name="status">
+                            <option value="Шинэ">Шинэ</option>
+                            <option value="Холбогдсон">Холбогдсон</option>
+                            <option value="Баталгаажсан">Баталгаажсан</option>
+                            <option value="Татгалзсан">Татгалзсан</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Элсэх мэргэжил <span style="color:#e7b95e">*</span></label>
+                <select id="edit_major" name="major" required>
+                    {% for m in majors %}
+                    <option value="{{ m.name }}">{{ m.name }} ({{ m.duration }})</option>
+                    {% endfor %}
+                </select>
+
+                <label>Холбоо барих утас (8 оронтой) <span style="color:#e7b95e">*</span></label>
+                <input type="tel" id="edit_phone" name="phone" pattern="[0-9]{8}" required>
+
+                <label>Тэмдэглэл</label>
+                <input type="text" id="edit_notes" name="notes">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('editModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Өөрчлөлтийг хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 3. БАГШ НЭМЭХ MODAL -->
+<div id="addTeacherModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'addTeacherModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Шинэ багш, удирдлага нэмэх</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('addTeacherModal')">×</button>
+        </div>
+        <form action="{{ url_for('admin_add_teacher') }}" method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Овог, нэр <span style="color:#e7b95e">*</span></label>
+                        <input type="text" name="name" placeholder="Жишээ: Г. Тэмүүлэн" required>
+                    </div>
+                    <div>
+                        <label>Албан тушаал <span style="color:#e7b95e">*</span></label>
+                        <input type="text" name="role" placeholder="Жишээ: График дизайны багш" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Эрдмийн зэрэг, цол</label>
+                        <input type="text" name="degree" placeholder="Жишээ: Магистр · Ахлах багш">
+                    </div>
+                    <div>
+                        <label>Тэнхим / Салбар</label>
+                        <select name="department">
+                            <option value="Удирдлага">Удирдлага</option>
+                            <option value="Мэргэжлийн тэнхим" selected>Мэргэжлийн тэнхим</option>
+                            <option value="Ерөнхий эрдмийн тэнхим">Ерөнхий эрдмийн тэнхим</option>
+                            <option value="Оюутны алба">Оюутны алба</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Ажилласан жил</label>
+                        <input type="text" name="experience_years" placeholder="12 жил" value="10 жил">
+                    </div>
+                    <div>
+                        <label>И-мэйл</label>
+                        <input type="email" name="email" placeholder="teacher@ikhzasag.edu.mn">
+                    </div>
+                    <div>
+                        <label>Утас</label>
+                        <input type="text" name="phone" placeholder="7711-9696">
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(220,214,255,0.25); border-radius: 12px; padding: 12px; margin-top: 12px;">
+                    <label style="margin-top: 0; color: #ffffff;">Багшийн зураг (Файл хуулах эсвэл URL)</label>
+                    <input type="file" name="photo_file" accept="image/*" style="margin-bottom: 8px; font-size: 12.5px;">
+                    <input type="text" name="photo_url" placeholder="Эсвэл зургийн зам / URL (Жишээ: /static/davaadorj.png)">
+                </div>
+
+                <label>Товч намтар, заадаг хичээл, туршлага</label>
+                <textarea name="bio" rows="3" placeholder="Багшийн мэргэшсэн чиглэл, туршлага..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('addTeacherModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Багш нэмэх</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 4. БАГШ ЗАСАХ MODAL -->
+<div id="editTeacherModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'editTeacherModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Багшийн мэдээлэл засах</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('editTeacherModal')">×</button>
+        </div>
+        <form id="editTeacherForm" action="" method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Овог, нэр <span style="color:#e7b95e">*</span></label>
+                        <input type="text" id="edit_t_name" name="name" required>
+                    </div>
+                    <div>
+                        <label>Албан тушаал <span style="color:#e7b95e">*</span></label>
+                        <input type="text" id="edit_t_role" name="role" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Эрдмийн зэрэг, цол</label>
+                        <input type="text" id="edit_t_degree" name="degree">
+                    </div>
+                    <div>
+                        <label>Тэнхим / Салбар</label>
+                        <select id="edit_t_department" name="department">
+                            <option value="Удирдлага">Удирдлага</option>
+                            <option value="Мэргэжлийн тэнхим">Мэргэжлийн тэнхим</option>
+                            <option value="Ерөнхий эрдмийн тэнхим">Ерөнхий эрдмийн тэнхим</option>
+                            <option value="Оюутны алба">Оюутны алба</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Ажилласан жил</label>
+                        <input type="text" id="edit_t_exp" name="experience_years">
+                    </div>
+                    <div>
+                        <label>И-мэйл</label>
+                        <input type="email" id="edit_t_email" name="email">
+                    </div>
+                    <div>
+                        <label>Утас</label>
+                        <input type="text" id="edit_t_phone" name="phone">
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(220,214,255,0.25); border-radius: 12px; padding: 12px; margin-top: 12px;">
+                    <label style="margin-top: 0; color: #ffffff;">Зураг шинэчлэх</label>
+                    <input type="file" name="photo_file" accept="image/*" style="margin-bottom: 8px; font-size: 12.5px;">
+                    <input type="text" id="edit_t_photo" name="photo_url" placeholder="Зургийн зам / URL">
+                </div>
+
+                <label>Товч намтар, заадаг хичээл</label>
+                <textarea id="edit_t_bio" name="bio" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('editTeacherModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 5. МЭРГЭЖИЛ НЭМЭХ MODAL -->
+<div id="addMajorModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'addMajorModal')">
+    <div class="modal-box" style="max-width: 640px;">
+        <div class="modal-header">
+            <h3>Шинэ мэргэжил, хөтөлбөр нэмэх</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('addMajorModal')">×</button>
+        </div>
+        <form action="{{ url_for('admin_add_major') }}" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Мэргэжлийн нэр <span style="color:#e7b95e">*</span></label>
+                        <input type="text" name="name" placeholder="Жишээ: Компьютер сүлжээ" required>
+                    </div>
+                    <div>
+                        <label>Салбар ангилал <span style="color:#e7b95e">*</span></label>
+                        <select name="category" required>
+                            <option value="design">Дизайн</option>
+                            <option value="service">Үйлчилгээ</option>
+                            <option value="health">Эрүүл мэнд</option>
+                            <option value="business">Бизнес</option>
+                            <option value="tech">Технологи</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Суралцах хугацаа</label>
+                        <input type="text" name="duration" value="3 жил" required>
+                    </div>
+                    <div>
+                        <label>Элсэх суурь</label>
+                        <input type="text" name="base_edu" value="9-р анги" required>
+                    </div>
+                    <div>
+                        <label>Тэтгэлэг</label>
+                        <input type="text" name="stipend" value="Сар бүр 200,000₮" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Төгсөөд олгох диплом</label>
+                        <input type="text" name="diploma" value="Мэргэжлийн диплом + Бүрэн дунд боловсрол">
+                    </div>
+                    <div>
+                        <label>Дэвшин суралцах боломж</label>
+                        <input type="text" name="pathway" value="ИЗОУИС-ийн 2-р курст шууд дэвших">
+                    </div>
+                </div>
+
+                <label>Төгсөөд ажиллах ажлын байр</label>
+                <input type="text" name="career" placeholder="Аж ахуйн нэгж, компанид мэргэжилтэн...">
+
+                <label>Дэлгэрэнгүй танилцуулга <span style="color:#e7b95e">*</span></label>
+                <textarea name="description" rows="3" placeholder="Суралцах хугацаанд эзэмших ур чадварууд..." required></textarea>
+
+                <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; cursor: pointer;">
+                    <input type="checkbox" name="featured" value="1" style="width: 18px; height: 18px; min-height: auto;">
+                    <span>Нүүр хуудасны онцлох мэргэжлийн хэсэгт гаргах</span>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('addMajorModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Мэргэжил нэмэх</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 6. МЭРГЭЖИЛ ЗАСАХ MODAL -->
+<div id="editMajorModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'editMajorModal')">
+    <div class="modal-box" style="max-width: 640px;">
+        <div class="modal-header">
+            <h3>Мэргэжил засах</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('editMajorModal')">×</button>
+        </div>
+        <form id="editMajorForm" action="" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Мэргэжлийн нэр <span style="color:#e7b95e">*</span></label>
+                        <input type="text" id="edit_m_name" name="name" required>
+                    </div>
+                    <div>
+                        <label>Салбар ангилал <span style="color:#e7b95e">*</span></label>
+                        <select id="edit_m_category" name="category" required>
+                            <option value="design">Дизайн</option>
+                            <option value="service">Үйлчилгээ</option>
+                            <option value="health">Эрүүл мэнд</option>
+                            <option value="business">Бизнес</option>
+                            <option value="tech">Технологи</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Суралцах хугацаа</label>
+                        <input type="text" id="edit_m_duration" name="duration" required>
+                    </div>
+                    <div>
+                        <label>Элсэх суурь</label>
+                        <input type="text" id="edit_m_base" name="base_edu" required>
+                    </div>
+                    <div>
+                        <label>Тэтгэлэг</label>
+                        <input type="text" id="edit_m_stipend" name="stipend" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Төгсөөд олгох диплом</label>
+                        <input type="text" id="edit_m_diploma" name="diploma">
+                    </div>
+                    <div>
+                        <label>Дэвшин суралцах боломж</label>
+                        <input type="text" id="edit_m_pathway" name="pathway">
+                    </div>
+                </div>
+
+                <label>Төгсөөд ажиллах ажлын байр</label>
+                <input type="text" id="edit_m_career" name="career">
+
+                <label>Дэлгэрэнгүй танилцуулга <span style="color:#e7b95e">*</span></label>
+                <textarea id="edit_m_desc" name="description" rows="3" required></textarea>
+
+                <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; cursor: pointer;">
+                    <input type="checkbox" id="edit_m_featured" name="featured" value="1" style="width: 18px; height: 18px; min-height: auto;">
+                    <span>Нүүр хуудасны онцлох мэргэжлийн хэсэгт гаргах</span>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('editMajorModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 7. ШИНЭ МЭДЭЭ НИЙТЛЭХ MODAL -->
+<div id="addNewsModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'addNewsModal')">
+    <div class="modal-box" style="max-width: 640px;">
+        <div class="modal-header">
+            <h3>Шинэ мэдээ, зарлал нийтлэх</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('addNewsModal')">×</button>
+        </div>
+        <form action="{{ url_for('admin_add_news') }}" method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Мэдээний гарчиг <span style="color:#e7b95e">*</span></label>
+                <input type="text" name="title" placeholder="Жишээ: 2026-2027 оны хичээлийн жилийн элсэлт эхэллээ" required>
+
+                <label>Ангилал <span style="color:#e7b95e">*</span></label>
+                <select name="category" required>
+                    <option value="Зарлал">Зарлал</option>
+                    <option value="Элсэлт">Элсэлт</option>
+                    <option value="Тэтгэлэг">Тэтгэлэг</option>
+                    <option value="Олон улс">Олон улс</option>
+                    <option value="Оюутны амьдрал">Оюутны амьдрал</option>
+                </select>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(220,214,255,0.25); border-radius: 12px; padding: 14px; margin-top: 14px;">
+                    <label style="margin-top: 0; font-weight: 700; color: #ffffff;">Мэдээний зураг оруулах</label>
+                    <div style="margin-bottom: 8px;">
+                        <label style="margin-top: 0; font-size: 12px; color: #a99fff;">1. Компьютероос файл хуулах:</label>
+                        <input type="file" id="news_image_file" name="image_file" accept="image/*" style="padding: 6px; font-size: 13px;" onchange="previewAddNewsImage(this)">
+                    </div>
+                    <div>
+                        <label style="margin-top: 0; font-size: 12px; color: #a99fff;">2. Эсвэл зургийн линк (URL):</label>
+                        <input type="text" id="news_image_url" name="image_url" placeholder="https://... эсвэл /static/..." oninput="previewAddNewsUrl(this.value)">
+                    </div>
+                    <div id="add_news_preview_box" style="margin-top: 10px; display: none;">
+                        <img id="add_news_preview_img" src="" alt="Preview" style="max-height: 120px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                </div>
+
+                <label>Товч агуулга <span style="color:#e7b95e">*</span></label>
+                <textarea name="summary" rows="3" required></textarea>
+
+                <label>Дэлгэрэнгүй агуулга</label>
+                <textarea name="content" rows="5"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('addNewsModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Нийтлэх</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 8. МЭДЭЭ ЗАСАХ MODAL -->
+<div id="editNewsModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'editNewsModal')">
+    <div class="modal-box" style="max-width: 640px;">
+        <div class="modal-header">
+            <h3>Мэдээ засах</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('editNewsModal')">×</button>
+        </div>
+        <form id="editNewsForm" action="" method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Мэдээний гарчиг <span style="color:#e7b95e">*</span></label>
+                <input type="text" id="edit_news_title" name="title" required>
+
+                <label>Ангилал <span style="color:#e7b95e">*</span></label>
+                <select id="edit_news_category" name="category" required>
+                    <option value="Зарлал">Зарлал</option>
+                    <option value="Элсэлт">Элсэлт</option>
+                    <option value="Тэтгэлэг">Тэтгэлэг</option>
+                    <option value="Олон улс">Олон улс</option>
+                    <option value="Оюутны амьдрал">Оюутны амьдрал</option>
+                </select>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(220,214,255,0.25); border-radius: 12px; padding: 14px; margin-top: 14px;">
+                    <label style="margin-top: 0; font-weight: 700; color: #ffffff;">Мэдээний зураг шинэчлэх</label>
+                    <div id="edit_news_current_box" style="margin-bottom: 8px; display: none;">
+                        <img id="edit_news_preview_img" src="" alt="Preview" style="max-height: 110px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                    <input type="file" id="edit_news_image_file" name="image_file" accept="image/*" style="margin-bottom: 8px; font-size: 13px;" onchange="previewEditNewsImage(this)">
+                    <input type="text" id="edit_news_image_url" name="image_url" placeholder="https://... эсвэл /static/..." oninput="previewEditNewsUrl(this.value)">
+                </div>
+
+                <label>Товч агуулга <span style="color:#e7b95e">*</span></label>
+                <textarea id="edit_news_summary" name="summary" rows="3" required></textarea>
+
+                <label>Дэлгэрэнгүй агуулга</label>
+                <textarea id="edit_news_content" name="content" rows="5"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('editNewsModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 9. FAQ НЭМЭХ MODAL -->
+<div id="addFaqModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'addFaqModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Түгээмэл асуулт, хариулт нэмэх</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('addFaqModal')">×</button>
+        </div>
+        <form action="{{ url_for('admin_add_faq') }}" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Асуулт <span style="color:#e7b95e">*</span></label>
+                <input type="text" name="question" placeholder="Жишээ: Сургалтын төлбөрөө хувааж төлж болох уу?" required>
+
+                <label>Хариулт <span style="color:#e7b95e">*</span></label>
+                <textarea name="answer" rows="5" placeholder="Дэлгэрэнгүй хариулт..." required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('addFaqModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Нэмэх</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 10. FAQ ЗАСАХ MODAL -->
+<div id="editFaqModal" class="modal-backdrop" onclick="closeOnBackdrop(event, 'editFaqModal')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Асуулт, хариулт засах</h3>
+            <button type="button" class="modal-close-icon" onclick="closeModal('editFaqModal')">×</button>
+        </div>
+        <form id="editFaqForm" action="" method="post" style="display:flex; flex-direction:column; flex:1; overflow:hidden; margin:0;">
+            <div class="modal-body">
+                <label>Асуулт <span style="color:#e7b95e">*</span></label>
+                <input type="text" id="edit_faq_q" name="question" required>
+
+                <label>Хариулт <span style="color:#e7b95e">*</span></label>
+                <textarea id="edit_faq_a" name="answer" rows="5" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('editFaqModal')">Болих</button>
+                <button type="submit" class="modal-btn-submit">Хадгалах</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const ALL_TABS = ['apps', 'teachers', 'majors', 'news', 'faqs', 'settings'];
+
+function switchTab(tab) {
+    if (!ALL_TABS.includes(tab)) tab = 'apps';
+    ALL_TABS.forEach(t => {
+        const pane = document.getElementById('tabContent_' + t);
+        const btn = document.getElementById('tabBtn_' + t);
+        if (pane) pane.style.display = (t === tab) ? 'block' : 'none';
+        if (btn) {
+            if (t === tab) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+    });
+    if (history.replaceState) {
+        history.replaceState(null, null, tab === 'apps' ? window.location.pathname : '?tab=' + tab);
+    }
+}
+
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('tab');
+    if (t && ALL_TABS.includes(t)) {
+        switchTab(t);
+    }
+})();
+
+function populateDates(prefix) {
+    const ySel = document.getElementById(prefix + '_year');
+    const dSel = document.getElementById(prefix + '_day');
+    if (!ySel || !dSel) return;
+    ySel.innerHTML = '<option value="">Он</option>';
+    for (let y = 2014; y >= 1980; y--) {
+        const o = document.createElement('option');
+        o.value = y;
+        o.textContent = y + ' он';
+        ySel.appendChild(o);
+    }
+    dSel.innerHTML = '<option value="">Өдөр</option>';
+    for (let d = 1; d <= 31; d++) {
+        const o = document.createElement('option');
+        const v = d < 10 ? '0' + d : d.toString();
+        o.value = v;
+        o.textContent = d + ' өдөр';
+        dSel.appendChild(o);
+    }
+}
+populateDates('add');
+populateDates('edit');
+
+function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+    document.body.style.overflow = '';
+}
+function closeOnBackdrop(e, id) {
+    if (e.target.id === id) closeModal(id);
+}
+
+// 1. Элсэгч modal
+function openAddModal() {
+    document.getElementById('addModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function openEditModal(btn) {
+    const id = btn.dataset.id;
+    const fullname = btn.dataset.fullname || '';
+    const birthdate = btn.dataset.birthdate || '';
+    const gender = btn.dataset.gender || 'эр';
+    const major = btn.dataset.major || '';
+    const phone = btn.dataset.phone || '';
+    const status = btn.dataset.status || 'Шинэ';
+    const notes = btn.dataset.notes || '';
+
+    document.getElementById('edit_id_label').textContent = 'ID #' + id;
+    document.getElementById('editForm').action = '/admin/edit/' + id;
+    document.getElementById('edit_fullname').value = fullname;
+    document.getElementById('edit_gender').value = (gender === 'эр' || gender === 'эрэгтэй') ? 'эр' : 'эм';
+    document.getElementById('edit_major').value = major;
+    document.getElementById('edit_phone').value = phone;
+    document.getElementById('edit_status').value = status;
+    document.getElementById('edit_notes').value = notes;
+
+    if (birthdate && birthdate.includes('-')) {
+        const parts = birthdate.split('-');
+        if (parts.length === 3) {
+            document.getElementById('edit_year').value = parts[0];
+            document.getElementById('edit_month').value = parts[1];
+            document.getElementById('edit_day').value = parts[2];
+        }
+    }
+    document.getElementById('editModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// 2. Багш modal
+function openAddTeacherModal() {
+    document.getElementById('addTeacherModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function openEditTeacherModal(btn) {
+    const id = btn.dataset.id;
+    document.getElementById('editTeacherForm').action = '/admin/teachers/edit/' + id;
+    document.getElementById('edit_t_name').value = btn.dataset.name || '';
+    document.getElementById('edit_t_role').value = btn.dataset.role || '';
+    document.getElementById('edit_t_degree').value = btn.dataset.degree || '';
+    document.getElementById('edit_t_department').value = btn.dataset.department || 'Мэргэжлийн тэнхим';
+    document.getElementById('edit_t_exp').value = btn.dataset.exp || '';
+    document.getElementById('edit_t_bio').value = btn.dataset.bio || '';
+    document.getElementById('edit_t_email').value = btn.dataset.email || '';
+    document.getElementById('edit_t_phone').value = btn.dataset.phone || '';
+    document.getElementById('edit_t_photo').value = btn.dataset.photo || '';
+    document.getElementById('editTeacherModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// 3. Мэргэжил modal
+function openAddMajorModal() {
+    document.getElementById('addMajorModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function openEditMajorModal(btn) {
+    const id = btn.dataset.id;
+    document.getElementById('editMajorForm').action = '/admin/majors/edit/' + id;
+    document.getElementById('edit_m_name').value = btn.dataset.name || '';
+    document.getElementById('edit_m_category').value = btn.dataset.category || 'design';
+    document.getElementById('edit_m_duration').value = btn.dataset.duration || '';
+    document.getElementById('edit_m_base').value = btn.dataset.base || '';
+    document.getElementById('edit_m_stipend').value = btn.dataset.stipend || '';
+    document.getElementById('edit_m_diploma').value = btn.dataset.diploma || '';
+    document.getElementById('edit_m_pathway').value = btn.dataset.pathway || '';
+    document.getElementById('edit_m_desc').value = btn.dataset.description || '';
+    document.getElementById('edit_m_career').value = btn.dataset.career || '';
+    document.getElementById('edit_m_featured').checked = (btn.dataset.featured === '1');
+    document.getElementById('editMajorModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// 4. Мэдээ modal
+function openAddNewsModal() {
+    const fInput = document.getElementById('news_image_file');
+    const uInput = document.getElementById('news_image_url');
+    if (fInput) fInput.value = '';
+    if (uInput) uInput.value = '';
+    document.getElementById('add_news_preview_box').style.display = 'none';
+    document.getElementById('addNewsModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function openEditNewsModal(btn) {
+    const id = btn.dataset.id;
+    const title = btn.dataset.title || '';
+    const category = btn.dataset.category || 'Зарлал';
+    const image = btn.dataset.image || '';
+    const summary = btn.dataset.summary || '';
+    const content = btn.dataset.content || summary;
+
+    document.getElementById('editNewsForm').action = '/admin/news/edit/' + id;
+    document.getElementById('edit_news_title').value = title;
+    const catSelect = document.getElementById('edit_news_category');
+    catSelect.value = category;
+    if (!catSelect.value) catSelect.value = 'Зарлал';
+    document.getElementById('edit_news_image_file').value = '';
+    document.getElementById('edit_news_image_url').value = image;
+    const curBox = document.getElementById('edit_news_current_box');
+    const curImg = document.getElementById('edit_news_preview_img');
+    if (image) {
+        curImg.src = image;
+        curBox.style.display = 'block';
+    } else {
+        curBox.style.display = 'none';
+    }
+    document.getElementById('edit_news_summary').value = summary;
+    document.getElementById('edit_news_content').value = content;
+    document.getElementById('editNewsModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function previewAddNewsImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('add_news_preview_img').src = e.target.result;
+            document.getElementById('add_news_preview_box').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+function previewAddNewsUrl(url) {
+    if (url && url.trim().length > 5) {
+        document.getElementById('add_news_preview_img').src = url.trim();
+        document.getElementById('add_news_preview_box').style.display = 'block';
+    }
+}
+function previewEditNewsImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('edit_news_preview_img').src = e.target.result;
+            document.getElementById('edit_news_current_box').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+function previewEditNewsUrl(url) {
+    if (url && url.trim().length > 5) {
+        document.getElementById('edit_news_preview_img').src = url.trim();
+        document.getElementById('edit_news_current_box').style.display = 'block';
+    }
+}
+
+// 5. FAQ modal
+function openAddFaqModal() {
+    document.getElementById('addFaqModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function openEditFaqModal(btn) {
+    const id = btn.dataset.id;
+    document.getElementById('editFaqForm').action = '/admin/faqs/edit/' + id;
+    document.getElementById('edit_faq_q').value = btn.dataset.question || '';
+    document.getElementById('edit_faq_a').value = btn.dataset.answer || '';
+    document.getElementById('editFaqModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Устгах функц
+function deleteSingle(btn) {
+    const actionUrl = btn.dataset ? btn.dataset.url : btn;
+    const title = (btn.dataset && btn.dataset.title) ? btn.dataset.title : '';
+    if (confirm(`'${title}' бичлэгийг устгахдаа итгэлтэй байна уу?`)) {
+        const form = document.getElementById('singleDeleteForm');
+        form.action = actionUrl;
+        form.submit();
+    }
+}
+
+// Олноор сонгох
+function toggleSelectAll(master) {
+    document.querySelectorAll('.row-checkbox').forEach(b => {
+        if (b.closest('tr').style.display !== 'none') b.checked = master.checked;
+    });
+    updateSelectedCount();
+}
+function updateSelectedCount() {
+    const count = document.querySelectorAll('.row-checkbox:checked').length;
+    document.getElementById('selectedCount').textContent = count;
+    const btn = document.getElementById('btnBulkDelete');
+    if (count > 0) {
+        btn.disabled = false;
+        btn.classList.add('active');
+    } else {
+        btn.disabled = true;
+        btn.classList.remove('active');
+    }
+}
+function submitBulkDelete() {
+    const count = document.querySelectorAll('.row-checkbox:checked').length;
+    if (count > 0 && confirm(`Сонгосон ${count} бүртгэлийг устгах уу?`)) {
+        document.getElementById('bulkDeleteForm').submit();
+    }
+}
+
+// Хайлтууд
+function bindTableSearch(inputId, tbodyId) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        document.querySelectorAll('#' + tbodyId + ' tr').forEach(tr => {
+            tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    });
+}
+bindTableSearch('admSearch', 'admRows');
+bindTableSearch('admTeacherSearch', 'admTeacherRows');
+bindTableSearch('admMajorSearch', 'admMajorRows');
+bindTableSearch('admNewsSearch', 'admNewsRows');
+</script>
+{% endblock %}

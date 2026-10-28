@@ -1,0 +1,1006 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Элсэх | Их Засаг Политехник Коллеж{% endblock %}
+
+{% block content %}
+
+<!-- BANNER -->
+<section class="page-banner" style="position: relative; z-index: 2;">
+    <div class="container">
+        <span class="eyebrow">2026–2027 ОНЫ ЭЛСЭЛТИЙН ЦАХИМ СИСТЕМ</span>
+        <h1>Ирээдүйн мэргэжлээ сонгоод<br><span>онлайнаар бүртгүүлээрэй</span></h1>
+        <p>Хөдөлмөрийн зах зээлд өндөр эрэлттэй 17 чиглэлийн мэргэжлээс сонголтоо хийж, 1 минутын дотор элсэлтийн анкет илгээнэ үү.</p>
+    </div>
+</section>
+
+<!-- МЭРГЭЖЛҮҮДИЙН ИНТЕРАКТИВ КАТАЛОГ & СОНГОГЧ -->
+<section class="section container" style="position: relative; z-index: 2; padding-top: 10px;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">МЭРГЭЖЛИЙН ХӨТӨЛБӨРҮҮД</span>
+            <h2>Элсэлт авах мэргэжлийн чиглэлүүд</h2>
+            <p>Та сонирхсон мэргэжлийнхээ картан дээр дарж бүртгэлийн анкет руу шууд сонгон шилжих боломжтой.</p>
+        </div>
+    </div>
+
+    <!-- Хайлт ба ангиллын шүүлтүүр -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+        <!-- Шүүлтүүрийн товчлуурууд -->
+        <div class="major-filter" style="margin-bottom: 0;">
+            <button type="button" class="filter-btn active" onclick="filterApplyMajors('all', this)">Бүгд (17)</button>
+            <button type="button" class="filter-btn" onclick="filterApplyMajors('design', this)">Дизайн (5)</button>
+            <button type="button" class="filter-btn" onclick="filterApplyMajors('service', this)">Үйлчилгээ (7)</button>
+            <button type="button" class="filter-btn" onclick="filterApplyMajors('health', this)">Эрүүл мэнд (1)</button>
+            <button type="button" class="filter-btn" onclick="filterApplyMajors('business', this)">Бизнес (3)</button>
+            <button type="button" class="filter-btn" onclick="filterApplyMajors('tech', this)">Технологи (1)</button>
+        </div>
+
+        <!-- Шуурхай хайлтын талбар -->
+        <div style="position: relative; min-width: 260px; max-width: 340px; width: 100%;">
+            <input type="text" id="majorSearchInput" oninput="searchApplyMajors()" 
+                   placeholder="Мэргэжил нэрээр хайх..." 
+                   style="width: 100%; padding: 11px 18px; border-radius: 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(220,214,255,0.25); color: #ffffff; font-size: 14px; outline: none; backdrop-filter: blur(8px); box-sizing: border-box;">
+        </div>
+    </div>
+
+    <!-- 17 МЭРГЭЖЛИЙН КАРТУУДЫН GRID -->
+    <div id="applyMajorsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px;">
+        
+        <!-- 1. Хэвлэлийн график дизайнер -->
+        <div class="apply-major-card" data-cat="design" data-name="Хэвлэлийн график дизайнер" onclick="selectMajorFromCard('Хэвлэлийн график дизайнер')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Хэвлэлийн график дизайнер</h4>
+            <p>Хэвлэлийн эх бэлтгэл, сурталчилгааны график, ном сэтгүүл, Adobe программ дээр бодит дадлага эзэмшинэ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Хэвлэлийн газар, студи</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 2. Хувцас дизайнч -->
+        <div class="apply-major-card" data-cat="design" data-name="Хувцас дизайнч" onclick="selectMajorFromCard('Хувцас дизайнч')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Хувцас дизайнч</h4>
+            <p>Загварын зураглал, өнгө зохицол, орчин үеийн хувцас загварын чиг хандлагыг тодорхойлогч бүтээлч дизайнер болно.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Загварын салон, брэнд</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 3. Хувцасны загвар зохион бүтээгч -->
+        <div class="apply-major-card" data-cat="design" data-name="Хувцасны загвар зохион бүтээгч" onclick="selectMajorFromCard('Хувцасны загвар зохион бүтээгч')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Хувцасны загвар зохион бүтээгч</h4>
+            <p>Хувцасны лекало гаргалт, компьютержсэн эсгүүр загварчлал болон оёдлын үйлдвэрлэлийн технологи эзэмшинэ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Оёдлын үйлдвэр, цех</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 4. Тайз дэлгэцийн дизайн технологи -->
+        <div class="apply-major-card" data-cat="design" data-name="Тайз дэлгэцийн дизайн технологи" onclick="selectMajorFromCard('Тайз дэлгэцийн дизайн технологи')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Тайз дэлгэцийн дизайн технологи</h4>
+            <p>Театр, кино, телевизийн тайзны орон зай, декораци урлал болон визуаль орчны технологийн шийдлүүдийг эзэмшинэ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Театр, кино продакшн</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 5. Оёмол бүтээгдэхүүн үйлдвэрлэл -->
+        <div class="apply-major-card" data-cat="design" data-name="Оёмол бүтээгдэхүүн үйлдвэрлэл" onclick="selectMajorFromCard('Оёмол бүтээгдэхүүн үйлдвэрлэл')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8c.9 0 1.8-.7 2-1.6l1.6-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/></svg></span>
+                <span class="badge duration alt">1.5 ЖИЛ</span>
+            </div>
+            <h4>Оёмол бүтээгдэхүүн үйлдвэрлэл</h4>
+            <p>Хөнгөн үйлдвэрлэлийн дэвшилтэт тоног төхөөрөмж дээр ажиллах, чанарын хяналт болон оёдлын технологийн удирдлага.</p>
+            <div class="tags">
+                <span class="tag base">12-р анги</span>
+                <span class="tag stipend">Техникийн диплом</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Хөнгөн үйлдвэр, компани</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 6. Хоолны үйлчилгээ -->
+        <div class="apply-major-card" data-cat="service" data-name="Хоолны үйлчилгээ" onclick="selectMajorFromCard('Хоолны үйлчилгээ')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Хоолны үйлчилгээ (Тогооч)</h4>
+            <p>Монгол, ази, европ хоолны технологи, олон улсын стандартын гал тогооны дадлага болон рестораны мастер тогооч.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Ресторан, зочид буудал</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 7. Гоо сайхны үйлчилгээ -->
+        <div class="apply-major-card" data-cat="service" data-name="Гоо сайхны үйлчилгээ" onclick="selectMajorFromCard('Гоо сайхны үйлчилгээ')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Гоо сайхны үйлчилгээ</h4>
+            <p>Мэргэжлийн арьс арчилгаа, нүүр будалт (Makeup), спа массаж, аппарат ажиллагаа болон гоо сайхны зөвлөгч.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Гоо сайхны салон, спа</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 8. Үсчин, гоо сайхан -->
+        <div class="apply-major-card" data-cat="service" data-name="Үсчин, гоо сайхан" onclick="selectMajorFromCard('Үсчин, гоо сайхан')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg></span>
+                <span class="badge duration">1+1 ЖИЛ</span>
+            </div>
+            <h4>Үсчин, гоо сайхан</h4>
+            <p>Үс засалт, будалт, хуйх арчилгаа, загварын хэлбэржүүлэлт болон салон менежментийн мэргэшсэн цогц ур чадвар.</p>
+            <div class="tags">
+                <span class="tag base">Суурь / Бүрэн дунд</span>
+                <span class="tag stipend">Мэргэжлийн зэрэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Салон, студи стилист</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 9. Аялал жуулчлалын 1+1 хөтөлбөр -->
+        <div class="apply-major-card" data-cat="service" data-name="Аялал жуулчлалын 1+1 хөтөлбөр" onclick="selectMajorFromCard('Аялал жуулчлалын 1+1 хөтөлбөр')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                <span class="badge duration intl">1+1 ОЛОН УЛС</span>
+            </div>
+            <h4>Аялал жуулчлал (БНСУ 1+1)</h4>
+            <p>Монголд 1 жил + БНСУ-ын Кён-Ин коллежид 1 жил суралцан Солонгост цалинтай дадлага хийх хамтарсан хөтөлбөр.</p>
+            <div class="tags">
+                <span class="tag base">Хос диплом</span>
+                <span class="tag stipend">Солонгост дадлага</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Олон улсын тур компани</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 10. Аялал жуулчлалын үйлчилгээ -->
+        <div class="apply-major-card" data-cat="service" data-name="Аялал жуулчлалын үйлчилгээ" onclick="selectMajorFromCard('Аялал жуулчлалын үйлчилгээ')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Аялал жуулчлалын үйлчилгээ</h4>
+            <p>Аяллын маршрут боловсруулах, хөтөч тайлбарлагч хийх, гадаад хэл болон жуулчны баазын зочлох үйлчилгээ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Тур оператор, аяллын хөтөч</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 11. Зочид буудал, зоогийн газрын үйлчилгээ -->
+        <div class="apply-major-card" data-cat="service" data-name="Зочид буудал, зоогийн газрын үйлчилгээ" onclick="selectMajorFromCard('Зочид буудал, зоогийн газрын үйлчилгээ')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Зочид буудал, зоогийн газар</h4>
+            <p>Олон улсын сүлжээ зочид буудлын хүлээн авах алба, өрөөний үйлчилгээ, захиалгын систем ба зочлох соёл.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">4-5 одтой буудал, ресторан</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 12. Барилгын сантехник, хоолой угсралт -->
+        <div class="apply-major-card" data-cat="service" data-name="Барилгын сантехник, хоолой угсралт" onclick="selectMajorFromCard('Барилгын сантехник, хоолой угсралт')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Барилгын сантехник, хоолой</h4>
+            <p>Барилгын инженерийн шугам сүлжээ, халаалт, цэвэр, бохир усны автоматжуулалт болон тоног төхөөрөмжийн засвар.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Барилга угсралтын компани</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 13. Сувилагчийн туслах -->
+        <div class="apply-major-card" data-cat="health" data-name="Сувилагчийн туслах" onclick="selectMajorFromCard('Сувилагчийн туслах')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Сувилагчийн туслах</h4>
+            <p>Анхан шатны тусламж үзүүлэх, өвчтөний асаргаа сувилгаа, эрүүл ахуйн стандарт болон эмнэлгийн туслах үйлчилгээ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Эмнэлэг, клиник, сувилал</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 14. Нягтлан бодох бүртгэлийн туслах ажилтан -->
+        <div class="apply-major-card" data-cat="business" data-name="Нягтлан бодох бүртгэлийн туслах ажилтан" onclick="selectMajorFromCard('Нягтлан бодох бүртгэлийн туслах ажилтан')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Нягтлан бодох бүртгэл</h4>
+            <p>Санхүүгийн анхан шатны баримт боловсруулалт, 1C ба санхүүгийн программ, татварын тооцоо, кассын гүйлгээ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Санхүүгийн алба, касс</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 15. Оффис ба бичиг хэргийн ажил -->
+        <div class="apply-major-card" data-cat="business" data-name="Оффис ба бичиг хэргийн ажил" onclick="selectMajorFromCard('Оффис ба бичиг хэргийн ажил')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Оффис, бичиг хэрэг (Нарийн бичиг)</h4>
+            <p>Албан хэрэг хөтлөлт, архивын дүрэм журам, оффисын орчин үеийн техник, удирдах ажилтны хувийн туслах, харилцааны ёс зүй.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Албан байгууллага, компани</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 16. Хүний нөөцийн менежмент -->
+        <div class="apply-major-card" data-cat="business" data-name="Хүний нөөцийн менежмент" onclick="selectMajorFromCard('Хүний нөөцийн менежмент')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Хүний нөөцийн менежмент</h4>
+            <p>Ажилтны бүртгэл, хөдөлмөрийн харилцаа, сонгон шалгаруулалт, байгууллагын соёл болон сургалт хөгжлийн хөтөлбөр.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">Хүний нөөцийн алба</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+        <!-- 17. Вэб дизайн -->
+        <div class="apply-major-card" data-cat="tech" data-name="Вэб дизайн" onclick="selectMajorFromCard('Вэб дизайн')">
+            <div class="card-top">
+                <span class="icon" style="color:#a99fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></span>
+                <span class="badge duration">3 ЖИЛ</span>
+            </div>
+            <h4>Вэб дизайн & Хөгжүүлэлт</h4>
+            <p>HTML, CSS, JavaScript, UI/UX дизайн, мобайл нийцтэй цахим хуудас хөгжүүлэлт болон дижитал технологийн үйлчилгээ.</p>
+            <div class="tags">
+                <span class="tag base">9-р анги</span>
+                <span class="tag stipend">200,000₮ тэтгэлэг</span>
+            </div>
+            <div class="card-bottom">
+                <span class="career">МТ компани, вэб студи</span>
+                <span class="action-btn">Сонгох →</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- MAIN LAYOUT: БҮРТГЭЛИЙН ФОРМ БОЛОН ЗААВАР -->
+<section class="section container" id="registrationSection" style="position: relative; z-index: 2; padding-top: 20px;">
+    <div class="apply-layout">
+
+        <!-- LEFT: INFO -->
+        <div class="apply-intro">
+
+            <span class="eyebrow">ДАВУУ ТАЛ БА ТЭТГЭЛЭГ</span>
+            <h2>Их Засаг коллежид элсэх</h2>
+            <p>Мэргэжлийн боловсрол эзэмшиж, ирээдүйгээ итгэлтэй эхлүүлэх хамгийн найдвартай сонголт.</p>
+
+            <div class="apply-benefit">
+                <span>01</span>
+                <div>
+                    <strong>17 Төрлийн эрэлттэй мэргэжил</strong>
+                    <p>Хөдөлмөрийн зах зээлд өндөр үнэлэгддэг орчин үеийн практик ур чадвар.</p>
+                </div>
+            </div>
+
+            <div class="apply-benefit">
+                <span>02</span>
+                <div>
+                    <strong>Туршлагатай профессор багш нар</strong>
+                    <p>Эрдмийн цол зэрэгтэй, үйлдвэрлэлийн арвин дадлагатай багш нарын удирдлага дор суралц.</p>
+                </div>
+            </div>
+
+            <div class="apply-benefit">
+                <span>03</span>
+                <div>
+                    <strong>Ажлын байрны 95% баталгаа</strong>
+                    <p>Гэрээт 50 гаруй нэр хүндтэй аж ахуйн нэгжүүдэд цалинтай дадлага ба ажлын байрны зуучлал.</p>
+                </div>
+            </div>
+
+            <div class="apply-benefit">
+                <span>04</span>
+                <div>
+                    <strong>ИЗОУИС-д шатлан дэвших эрх</strong>
+                    <p>Коллежоо төгсөөд Их Засаг ОУИС-ийн бакалаврын 2-р курст шатлан суралцаж дээд боловсрол эзэмшинэ.</p>
+                </div>
+            </div>
+
+            <!-- БҮРДҮҮЛЭХ МАТЕРИАЛЫН ЖАГСААЛТ -->
+            <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.18); border-radius: 14px; padding: 22px; margin-top: 24px; backdrop-filter: blur(8px);">
+                <span class="eyebrow" style="margin-bottom: 8px; display: block;">ЭЛСЭГЧДИЙН АНХААРАЛД</span>
+                <h4 style="color: #ffffff; margin: 0 0 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e7b95e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Бүрдүүлэх материалын жагсаалт:</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #cfc8ff; font-size: 13.5px; line-height: 1.8;">
+                    <li>Суурь боловсролын гэрчилгээ (9-р анги) эсвэл Бүрэн дунд боловсролын үнэмлэх (12-р анги)</li>
+                    <li>Иргэний үнэмлэхийн хуулбар эсвэл E-Mongolia лавлагаа</li>
+                    <li>Цээж зураг 3х4 хэмжээтэй (4 хувь)</li>
+                    <li>Элсэлтийн онлайн анкет (Энэ хуудсаар илгээнэ)</li>
+                </ul>
+            </div>
+
+            <!-- САР БҮРИЙН ТЭТГЭЛЭГ ДЭМЖЛЭГ -->
+            <div style="background: rgba(231, 185, 94, 0.08); border: 1px solid rgba(231, 185, 94, 0.3); border-radius: 14px; padding: 18px; margin-top: 18px; backdrop-filter: blur(8px);">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(231,185,94,0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #f5d995;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #f5d995; font-size: 14px; display: block;">Сар бүр 200,000₮ тэтгэлэг</strong>
+                        <p style="margin: 3px 0 0; color: #e8dfc8; font-size: 12.5px; line-height: 1.5;">
+                            Засгийн газрын МБСД сангаас 9-р анги суурьтай суралцагч бүрт олгогддог сар бүрийн мөнгөн дэмжлэгт бүрэн хамрагдана.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply-contacts" style="background: rgba(255, 255, 255, 0.05); padding: 22px; border-radius: 14px; border: 1px solid rgba(231, 185, 94, 0.25); margin-top: 24px;">
+                <span class="eyebrow" style="margin-bottom: 12px; display: block;">ХОЛБОО БАРИХ & ЗӨВЛӨГӨӨ</span>
+                <p style="margin: 8px 0; color: #cfc8ff; display: flex; align-items: center; gap: 8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e7b95e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> <span><strong>Утас:</strong> <a href="tel:77119696" style="color: #ffffff; text-decoration: underline;">7711-9696</a>, <a href="tel:70157765" style="color: #ffffff; text-decoration: underline;">7015-7765</a></span></p>
+                <p style="margin: 8px 0; color: #cfc8ff; display: flex; align-items: center; gap: 8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e7b95e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <span><strong>Хаяг:</strong> Улаанбаатар хот, БЗД, 30-р хороо, Доржийн гудамж, Их Засаг цогцолбор</span></p>
+                <p style="margin: 8px 0; color: #cfc8ff; display: flex; align-items: center; gap: 8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e7b95e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> <span><strong>И-мэйл:</strong> <a href="mailto:info@ikhzasag.edu.mn" style="color: #ffffff; text-decoration: underline;">info@ikhzasag.edu.mn</a></span></p>
+                <p style="margin: 8px 0; color: #cfc8ff; display: flex; align-items: center; gap: 8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e7b95e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span><strong>Цагийн хуваарь:</strong> Даваа–Баасан 08:30–17:30</span></p>
+            </div>
+        </div>
+
+        <!-- RIGHT: FORM CARD -->
+        <div class="form-card" id="formCard" style="background: #ffffff; color: #1e293b; border-radius: 18px; padding: 36px; box-shadow: 0 16px 40px rgba(0,0,0,0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <h2 style="color: #10243b; margin: 0; font-size: 24px;">Элсэлтийн анкет</h2>
+                <span style="background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">2026-2027</span>
+            </div>
+            <p style="color: #64748b; margin-bottom: 24px; font-size: 14px;">Мэдээллээ үнэн зөв бөглөнө үү. Бид тантай 24 цагийн дотор холбогдоно.</p>
+
+            <!-- Flask Flash мессежүүд -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}" style="padding: 14px 18px; border-radius: 10px; margin-bottom: 18px; font-size: 14px; font-weight: 600; {% if category == 'success' %}background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;{% else %}background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca;{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- FLASK ROUTE РҮҮ ӨГӨГДӨЛ ИЛГЭЭХ FORM -->
+            <form action="{{ url_for('apply') }}" method="POST" class="apply-form" id="admissionForm">
+
+                <!-- 1. Овог, нэр -->
+                <label for="fullname" style="font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 14px; margin-bottom: 6px;">
+                    Овог, нэр <span style="color:#d93d2e">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="fullname"
+                    name="fullname"
+                    placeholder="Жишээ: Бат овогтой Болд"
+                    autocomplete="name"
+                    required
+                    style="width:100%; min-height:48px; padding:12px 14px; border:1px solid #cbd5e1; border-radius:9px; box-sizing: border-box; font-size: 15px;">
+
+                <!-- 2. Төрсөн огноо (Dropdown сонголт) -->
+                <label style="font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 14px; margin-bottom: 6px;">
+                    Төрсөн огноо <span style="color:#d93d2e">*</span>
+                </label>
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px;">
+                    <!-- Он -->
+                    <select id="birth_year" name="birth_year" onchange="updateBirthdate()" required
+                            style="width: 100%; min-height:48px; padding:10px 12px; border:1px solid #cbd5e1; border-radius:9px; font-size: 14.5px; background: #ffffff; color: #1e293b; outline: none; box-sizing: border-box;">
+                        <option value="">Он сонгох</option>
+                    </select>
+
+                    <!-- Сар -->
+                    <select id="birth_month" name="birth_month" onchange="updateBirthdate()" required
+                            style="width: 100%; min-height:48px; padding:10px 12px; border:1px solid #cbd5e1; border-radius:9px; font-size: 14.5px; background: #ffffff; color: #1e293b; outline: none; box-sizing: border-box;">
+                        <option value="">Сар</option>
+                        <option value="01">1 сар</option>
+                        <option value="02">2 сар</option>
+                        <option value="03">3 сар</option>
+                        <option value="04">4 сар</option>
+                        <option value="05">5 сар</option>
+                        <option value="06">6 сар</option>
+                        <option value="07">7 сар</option>
+                        <option value="08">8 сар</option>
+                        <option value="09">9 сар</option>
+                        <option value="10">10 сар</option>
+                        <option value="11">11 сар</option>
+                        <option value="12">12 сар</option>
+                    </select>
+
+                    <!-- Өдөр -->
+                    <select id="birth_day" name="birth_day" onchange="updateBirthdate()" required
+                            style="width: 100%; min-height:48px; padding:10px 12px; border:1px solid #cbd5e1; border-radius:9px; font-size: 14.5px; background: #ffffff; color: #1e293b; outline: none; box-sizing: border-box;">
+                        <option value="">Өдөр</option>
+                    </select>
+                </div>
+                <!-- Нууц талбар: YYYY-MM-DD хэлбэрээр нэгтгэн серверт илгээнэ -->
+                <input type="hidden" id="birthdate" name="birthdate">
+
+                <!-- 3. Хүйс -->
+                <label for="gender" style="font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 14px; margin-bottom: 6px;">
+                    Хүйс <span style="color:#d93d2e">*</span>
+                </label>
+                <select id="gender" name="gender" required style="width:100%; min-height:48px; padding:12px 14px; border:1px solid #cbd5e1; border-radius:9px; box-sizing: border-box; font-size: 15px;">
+                    <option value="">Хүйсээ сонгоно уу</option>
+                    <option value="эр">Эрэгтэй</option>
+                    <option value="эм">Эмэгтэй</option>
+                </select>
+
+                <!-- 4. Элсэх мэргэжил (17 мэргэжил бүрэн) -->
+                <label for="major" style="font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 14px; margin-bottom: 6px;">
+                    Элсэх мэргэжил <span style="color:#d93d2e">*</span>
+                </label>
+                <select id="major" name="major" onchange="onSelectMajorChange(this.value)" required style="width:100%; min-height:48px; padding:12px 14px; border:1px solid #cbd5e1; border-radius:9px; box-sizing: border-box; font-size: 15px;">
+                    <option value="">Мэргэжлээ сонгоно уу</option>
+                    {% for m in majors %}
+                        <option value="{{ m.name }}">{{ m.name }} ({{ m.duration }} · {{ m.category_label }})</option>
+                    {% endfor %}
+                </select>
+
+                <!-- СОНГОСОН МЭРГЭЖЛИЙН ДЭЛГЭРЭНГҮЙ PREVIEW ХАЙРЦАГ -->
+                <div id="selectedMajorDetail" style="display: none; margin-top: 14px; background: #f1f5f9; border: 1.5px solid #7c6cf6; border-radius: 12px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <strong id="detailTitle" style="color: #0f172a; font-size: 15px;"></strong>
+                        <span id="detailBadge" style="background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700;"></span>
+                    </div>
+                    <p id="detailDesc" style="margin: 0 0 10px; color: #475569; font-size: 13px; line-height: 1.5;"></p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12.5px; border-top: 1px solid #cbd5e1; padding-top: 10px; color: #334155;">
+                        <div style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> <strong>Суурь:</strong> <span id="detailBase"></span></div>
+                        <div style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> <strong>Тэтгэлэг:</strong> <span id="detailStipend"></span></div>
+                        <div style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> <strong>Диплом:</strong> <span id="detailDiploma"></span></div>
+                        <div style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M4 10l8-5 8 5"></path></svg> <strong>Дэвших:</strong> <span id="detailPathway"></span></div>
+                    </div>
+                </div>
+
+                <!-- 5. Холбоо барих утас -->
+                <label for="phone" style="font-weight: 600; font-size: 14px; color: #334155; display: block; margin-top: 16px; margin-bottom: 6px;">
+                    Холбоо барих утас <span style="color:#d93d2e">*</span>
+                </label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Жишээ: 99112233"
+                    pattern="[0-9]{8}"
+                    title="8 оронтой утасны дугаар оруулна уу"
+                    autocomplete="tel"
+                    required
+                    style="width:100%; min-height:48px; padding:12px 14px; border:1px solid #cbd5e1; border-radius:9px; box-sizing: border-box; font-size: 15px;">
+
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="btn-primary form-submit"
+                    style="margin-top: 24px; width: 100%; justify-content: center; font-size: 16px;">
+                    Бүртгэл илгээх →
+                </button>
+
+                <p style="margin: 16px 0 0; font-size: 12px; color: #64748b; text-align: center; line-height: 1.5; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Таны хувийн мэдээлэл нууцлалын хуулийн дагуу найдвартай хамгаалагдана. Бүртгүүлсний дараа сургуулийн зөвлөх ажлын 24 цагийн дотор холбогдох болно.
+                </p>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- МЭРГЭЖЛИЙН КАТАЛОГИЙН STYLES -->
+<style>
+.apply-major-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(220, 214, 255, 0.16);
+    border-radius: 16px;
+    padding: 22px;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.apply-major-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 108, 246, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+.apply-major-card.selected {
+    border-color: #7c6cf6 !important;
+    background: rgba(124, 108, 246, 0.16) !important;
+    box-shadow: 0 0 0 2px #7c6cf6, 0 12px 30px rgba(124, 108, 246, 0.35);
+}
+.apply-major-card .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+.apply-major-card .card-top .icon {
+    font-size: 32px;
+}
+.apply-major-card .card-top .badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.apply-major-card .card-top .badge.duration {
+    background: rgba(124, 108, 246, 0.15);
+    border: 1px solid rgba(124, 108, 246, 0.35);
+    color: #b7aeff;
+}
+.apply-major-card .card-top .badge.duration.alt {
+    background: rgba(45, 212, 191, 0.15);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    color: #5eead4;
+}
+.apply-major-card .card-top .badge.duration.intl {
+    background: rgba(231, 185, 94, 0.15);
+    border: 1px solid rgba(231, 185, 94, 0.4);
+    color: #f5d995;
+}
+.apply-major-card h4 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 17px;
+    line-height: 1.35;
+}
+.apply-major-card p {
+    margin: 0 0 14px;
+    color: #cfc8ff;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.apply-major-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.apply-major-card .tags .tag {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+}
+.apply-major-card .tags .tag.base {
+    background: rgba(255, 255, 255, 0.06);
+    color: #cfc8ff;
+}
+.apply-major-card .tags .tag.stipend {
+    background: rgba(231, 185, 94, 0.12);
+    border: 1px solid rgba(231, 185, 94, 0.3);
+    color: #f5d995;
+}
+.apply-major-card .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 12px;
+}
+.apply-major-card .card-bottom .career {
+    font-size: 12px;
+    color: #a99fff;
+}
+.apply-major-card .card-bottom .action-btn {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+}
+.apply-major-card:hover .action-btn {
+    transform: translateX(4px);
+    color: #e7b95e;
+}
+</style>
+
+<!-- ЖАВА СКРИПТ: ИНТЕРАКТИВ МЭРГЭЖИЛ СОНГОГЧ & SYNC -->
+<script>
+const MAJORS_DATA = {
+    "Хэвлэлийн график дизайнер": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Хэвлэлийн эх бэлтгэл, зар сурталчилгааны график, ном сэтгүүлийн дизайн, дижитал зураглал болон брэнд бүтээх ур чадварыг Adobe программ хангамжууд дээр бодит дадлагаар эзэмшинэ."
+    },
+    "Хувцас дизайнч": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Хувцасны загвар зохион бүтээх, загварын зураг зурах, шинэлэг өнгө төрх тодорхойлох болон загварын ертөнцийн чиг хандлагыг тодорхойлогч бүтээлч дизайнер болно."
+    },
+    "Хувцасны загвар зохион бүтээгч": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Хувцасны лекало гаргах, компьютержсэн эсгүүр загварчлал, материалын бүтэц, техникийн нарийвчлалтай зохион бүтээлт эзэмшинэ."
+    },
+    "Тайз дэлгэцийн дизайн технологи": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Кино, телевиз, театрын тайзны орон зай, гэрэлтүүлэг, визуаль орчин, тайзны декораци урлах орчин үеийн технологи эзэмшинэ."
+    },
+    "Оёмол бүтээгдэхүүн үйлдвэрлэл": {
+        duration: "1.5 жил",
+        base: "12-р анги суурьтай",
+        stipend: "МБСД сангийн тэтгэлэг",
+        diploma: "Техникийн боловсролын диплом",
+        pathway: "ИЗОУИС бакалавр",
+        desc: "Хөнгөн үйлдвэрлэлийн дэвшилтэт тоног төхөөрөмж дээр ажиллах, оёдлын технологи, чанарын хяналт болон үйлдвэрлэлийн удирдлага эзэмшинэ."
+    },
+    "Хоолны үйлчилгээ": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Монгол болон олон улсын ази, европ хоолны технологи, стандартын гал тогооны аюулгүй ажиллагаа, меню төлөвлөлт, нийтийн хоолны мэргэжлийн мастер тогооч."
+    },
+    "Гоо сайхны үйлчилгээ": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Мэргэжлийн арьс арчилгаа, нүүр будалт (Makeup), спа массаж, аппарат ажиллагаа болон гоо сайхны үйлчилгээний орчин үеийн чиг хандлагад суралцана."
+    },
+    "Үсчин, гоо сайхан": {
+        duration: "1+1 жил",
+        base: "Суурь эсвэл бүрэн дунд",
+        stipend: "МБСД тэтгэлэг",
+        diploma: "Мэргэжлийн боловсролын диплом",
+        pathway: "Мэргэшсэн зэрэг",
+        desc: "Үс засалт, будалт, хуйх арчилгаа, үсний хэлбэржүүлэлт болон салон менежментийн цогц ур чадвар эзэмшинэ."
+    },
+    "Аялал жуулчлалын 1+1 хөтөлбөр": {
+        duration: "1+1 жил (БНСУ)",
+        base: "Суурь / Бүрэн дунд",
+        stipend: "Солонгос улсад цалинтай дадлага",
+        diploma: "Монгол & БНСУ хос диплом",
+        pathway: "БНСУ Кён-Ин Их Сургууль",
+        desc: "Монголд 1 жил + БНСУ-ын Кён-Ин их сургуулийн коллежид 1 жил суралцан олон улсын аялал жуулчлал, солонгос хэл, цалинтай дадлага хийх хамтарсан тусгай хөтөлбөр."
+    },
+    "Аялал жуулчлалын үйлчилгээ": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Монгол орны болон гадаадын аялал жуулчлалын маршрут төлөвлөх, хөтөч тайлбарлагч хийх, гадаад хэл, зочлох үйлчилгээний менежмент эзэмшинэ."
+    },
+    "Зочид буудал, зоогийн газрын үйлчилгээ": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Олон улсын сүлжээ зочид буудал, зоогийн газрын хүлээн авах алба, өрөөний үйлчилгээ, захиалгын систем, зочлох соёлыг олон улсын стандартаар эзэмшинэ."
+    },
+    "Барилгын сантехник, хоолой угсралт": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Барилгын халаалт, цэвэр, бохир усны шугам сүлжээний угсралт, автоматжуулалт, сантехникийн тоног төхөөрөмжийн засвар үйлчилгээ эзэмшинэ."
+    },
+    "Сувилагчийн туслах": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "Анагаах ухааны их сургууль",
+        desc: "Эмнэлгийн анхан шатны тусламж, өвчтөний асаргаа сувилгаа, эрүүл ахуйн дэглэм, эмчийн зааварчилгааг хэрэгжүүлэх энэрэнгүй мэргэжил."
+    },
+    "Нягтлан бодох бүртгэлийн туслах ажилтан": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Санхүүгийн анхан шатны баримт боловсруулах, санхүүгийн программ хангамж (1C, Excel), татварын тайлан тооцоо, кассын гүйлгээ хөтлөх чадвар эзэмшинэ."
+    },
+    "Оффис ба бичиг хэргийн ажил": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Байгууллагын албан хэрэг хөтлөлт, архивын дүрэм журам, оффисын орчин үеийн техник хэрэгсэл, удирдах ажилтны хувийн туслах, бизнесийн харилцааны ёс зүй."
+    },
+    "Хүний нөөцийн менежмент": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "Ажилтны бүртгэл хөтлөлт, хөдөлмөрийн хууль тогтоомж, сонгон шалгаруулалт, байгууллагын соёл, сургалт хөгжлийн хөтөлбөр боловсруулалт."
+    },
+    "Вэб дизайн": {
+        duration: "3 жил",
+        base: "9-р анги суурьтай",
+        stipend: "Сар бүр 200,000₮",
+        diploma: "Бүрэн дунд + Мэргэжлийн диплом",
+        pathway: "ИЗОУИС-ийн 2-р курс",
+        desc: "HTML, CSS, JavaScript, UI/UX дизайн, цахим хуудас бүтээх, мобайл нийцтэй вэбсайт хөгжүүлэлт болон компьютерийн техник хангамжийн үйлчилгээ."
+    }
+};
+
+{% for m in majors %}
+MAJORS_DATA[{{ m.name|tojson }}] = {
+    duration: {{ m.duration|tojson }},
+    base: {{ m.base_edu|tojson }},
+    stipend: {{ m.stipend|tojson }},
+    diploma: {{ m.diploma|tojson }},
+    pathway: {{ m.pathway|tojson }},
+    desc: {{ m.description|tojson }}
+};
+{% endfor %}
+
+function filterApplyMajors(cat, btn) {
+    const buttons = document.querySelectorAll('.major-filter .filter-btn');
+    buttons.forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const cards = document.querySelectorAll('.apply-major-card');
+    cards.forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function searchApplyMajors() {
+    const input = document.getElementById('majorSearchInput').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.apply-major-card');
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(input)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function updateDetailPreview(majorName) {
+    const box = document.getElementById('selectedMajorDetail');
+    const data = MAJORS_DATA[majorName];
+    if (data) {
+        document.getElementById('detailTitle').textContent = majorName;
+        document.getElementById('detailBadge').textContent = data.duration;
+        document.getElementById('detailDesc').textContent = data.desc;
+        document.getElementById('detailBase').textContent = data.base;
+        document.getElementById('detailStipend').textContent = data.stipend;
+        document.getElementById('detailDiploma').textContent = data.diploma;
+        document.getElementById('detailPathway').textContent = data.pathway;
+        box.style.display = 'block';
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+function onSelectMajorChange(val) {
+    updateDetailPreview(val);
+    highlightSelectedCard(val);
+}
+
+function highlightSelectedCard(majorName) {
+    const cards = document.querySelectorAll('.apply-major-card');
+    cards.forEach(c => {
+        if (c.getAttribute('data-name') === majorName) {
+            c.classList.add('selected');
+        } else {
+            c.classList.remove('selected');
+        }
+    });
+}
+
+function selectMajorFromCard(majorName) {
+    const select = document.getElementById('major');
+    select.value = majorName;
+    updateDetailPreview(majorName);
+    highlightSelectedCard(majorName);
+
+    // Зөөлөн гүйлгэж бүртгэлийн карт руу очих
+    const formSection = document.getElementById('formCard');
+    if (formSection) {
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Сонгогдсон талбарыг түр гэрэлтүүлэх
+        select.style.borderColor = '#7c6cf6';
+        select.style.boxShadow = '0 0 0 3px rgba(124, 108, 246, 0.35)';
+        setTimeout(() => {
+            select.style.boxShadow = '';
+        }, 1500);
+    }
+}
+
+// Төрсөн огнооны dropdown сонголтуудыг үүсгэх & тооцоолох
+function populateBirthDateDropdowns() {
+    const yearSelect = document.getElementById('birth_year');
+    const daySelect = document.getElementById('birth_day');
+    if (!yearSelect || !daySelect) return;
+    
+    // Он: 2014 оноос 1980 он хүртэл
+    const currentYear = 2026;
+    for (let y = currentYear - 12; y >= 1980; y--) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y + ' он';
+        yearSelect.appendChild(opt);
+    }
+    
+    // Өдөр: 1-ээс 31 хүртэл
+    for (let d = 1; d <= 31; d++) {
+        const opt = document.createElement('option');
+        const val = d < 10 ? '0' + d : d.toString();
+        opt.value = val;
+        opt.textContent = d + ' өдөр';
+        daySelect.appendChild(opt);
+    }
+}
+
+function updateBirthdate() {
+    const y = document.getElementById('birth_year').value;
+    const m = document.getElementById('birth_month').value;
+    const dSelect = document.getElementById('birth_day');
+    if (!dSelect) return;
+
+    // Сар болон оны өдрийн тоог зөв тохируулах (2-р сар 28/29 өдөр, 30/31 өдөр)
+    if (y && m) {
+        const daysInMonth = new Date(parseInt(y, 10), parseInt(m, 10), 0).getDate();
+        const currentSelectedDay = parseInt(dSelect.value, 10);
+        
+        const currentCount = dSelect.options.length - 1;
+        if (currentCount !== daysInMonth) {
+            dSelect.innerHTML = '<option value="">Өдөр</option>';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const opt = document.createElement('option');
+                const val = i < 10 ? '0' + i : i.toString();
+                opt.value = val;
+                opt.textContent = i + ' өдөр';
+                dSelect.appendChild(opt);
+            }
+            if (currentSelectedDay && currentSelectedDay <= daysInMonth) {
+                dSelect.value = currentSelectedDay < 10 ? '0' + currentSelectedDay : currentSelectedDay.toString();
+            }
+        }
+    }
+
+    const hidden = document.getElementById('birthdate');
+    if (y && m && dSelect.value) {
+        hidden.value = `${y}-${m}-${dSelect.value}`;
+    } else {
+        hidden.value = '';
+    }
+}
+
+// Хуудас ачаалагдах үед
+document.addEventListener('DOMContentLoaded', () => {
+    populateBirthDateDropdowns();
+
+    const form = document.getElementById('admissionForm');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            updateBirthdate();
+            const hidden = document.getElementById('birthdate');
+            if (!hidden.value) {
+                e.preventDefault();
+                alert('Төрсөн огнооны он, сар, өдрөө бүрэн сонгоно уу.');
+            }
+        });
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const m = params.get('major');
+    if (m && MAJORS_DATA[m]) {
+        selectMajorFromCard(m);
+    }
+});
+</script>
+
+{% endblock %}
+

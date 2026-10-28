@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Хуудас олдсонгүй (404) | Их Засаг Политехник Коллеж{% endblock %}
+
+{% block content %}
+<section class="section container" style="position: relative; z-index: 2; min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 60px 20px;">
+    <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.2); border-radius: 24px; padding: 50px 30px; max-width: 600px; width: 100%; backdrop-filter: blur(12px); box-shadow: 0 20px 45px rgba(0,0,0,0.35);">
+        <div style="font-size: 72px; font-weight: 900; background: linear-gradient(135deg, #e7b95e, #7c6cf6); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; margin-bottom: 14px;">
+            404
+        </div>
+        <h2 style="color: #ffffff; font-size: 24px; margin: 0 0 12px;">Уучлаарай, хуудас олдсонгүй</h2>
+        <p style="color: #cfc8ff; font-size: 15px; line-height: 1.6; margin: 0 0 28px;">
+            Таны хайсан хуудас устгагдсан, нэр нь өөрчлөгдсөн эсвэл түр хугацаанд ашиглах боломжгүй болсон байж болзошгүй.
+        </p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('home') }}" class="btn-primary">Нүүр хуудас руу буцах →</a>
+            <a href="{{ url_for('students') }}" class="btn-secondary">Мэргэжлүүд үзэх</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

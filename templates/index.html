@@ -1,0 +1,466 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Нүүр | Их Засаг Политехник Коллеж{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        background: transparent !important;
+        position: relative;
+        z-index: 2;
+    }
+    .hero h1 span {
+        background: linear-gradient(90deg, #cfc8ff, #8f84ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container hero-content" style="position: relative; z-index: 2;">
+        <span class="eyebrow">{{ site_settings.academic_year }} ОНЫ ЭЛСЭЛТ</span>
+        <h1>Ирээдүйн мэргэжлээ<br><span>өнөөдөр сонго.</span></h1>
+        <p>Сонирхолдоо нийцсэн мэргэжлээр суралцаж, өөрийн ирээдүйг бүтээх эхлэлээ тавиарай. Их Засаг Политехник Коллеж таныг урьж байна.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{{ url_for('apply') }}">Элсэлтийн бүртгэл →</a>
+            <a class="btn-secondary" href="{{ url_for('about') }}">Бидний тухай</a>
+        </div>
+        <div class="hero-note" style="margin-top: 25px; color: #cfc8ff; font-size: 14px;">
+            <span class="note-dot"></span> {{ site_settings.admission_status }}
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-bar" style="position: relative; z-index: 2;">
+    <div class="container stats-grid">
+        <div class="stat-item">
+            <span class="stat-number">{{ site_settings.stat_majors }}</span>
+            <span class="stat-label">Мэргэжил</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ site_settings.stat_students }}</span>
+            <span class="stat-label">Оюутнууд</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ site_settings.stat_teachers }}</span>
+            <span class="stat-label">Туршлагатай багш</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ site_settings.stat_employment }}</span>
+            <span class="stat-label">Ажил эрхлэлт</span>
+        </div>
+    </div>
+</section>
+
+<!-- MAJORS PREVIEW -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">БОЛОМЖОО НЭЭ</span>
+            <h2>Онцлох сургалтын мэргэжлүүд</h2>
+            <p>Өөрт тохирох чиглэлээ сонгон дэлгэрэнгүй мэдээлэл аваарай.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a class="text-link" href="{{ url_for('students') }}">Бүгдийг харах →</a>
+        </div>
+    </div>
+
+    <div class="major-grid">
+        {% for m in featured_majors %}
+        <a class="major-card" href="{{ url_for('apply') }}?major={{ m.name | urlencode }}">
+            <div class="major-icon" style="color: #a99fff; margin-bottom: 12px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(169, 159, 255, 0.12); border: 1px solid rgba(169, 159, 255, 0.3);">
+                {% if m.category == 'design' %}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                {% elif m.category == 'tech' %}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                {% elif m.category == 'health' %}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                {% elif m.category == 'business' %}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+                {% else %}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg>
+                {% endif %}
+            </div>
+            <h3>{{ m.name }}</h3>
+            <p>Суралцах хугацаа: {{ m.duration }} · {{ m.base_edu }}</p>
+            <div style="margin-bottom: 10px;">
+                <span style="background: rgba(231,185,94,0.12); color: #f5d995; border: 1px solid rgba(231,185,94,0.3); font-size: 11px; padding: 2px 8px; border-radius: 4px;">{{ m.stipend }}</span>
+            </div>
+            <span class="card-link">Сонгох →</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- СУРГУУЛИЙН МЭДЭЭЛЭЛ БА ЗАРЛАЛУУД -->
+<section class="section container" id="news-section" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">СУРГУУЛИЙН МЭДЭЭЛЭЛ БА ЗАРЛАЛ</span>
+            <h2>Сургуулийн мэдээлэл</h2>
+            <p>Их Засаг Политехник Коллежийн онцлох үйл явдал, уралдаан тэмцээн, элсэлт болон тэтгэлгийн мэдээллүүд</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        {% for n in news_list %}
+        <div class="news-card" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.16); border-radius: 18px; padding: 20px; backdrop-filter: blur(8px); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; overflow: hidden; cursor: pointer;"
+             data-title="{{ n.title }}"
+             data-category="{{ n.category }}"
+             data-image="{{ n.image or '' }}"
+             data-content="{{ n.content or n.summary }}"
+             data-date="{{ n.created_at or '' }}"
+             onclick="showNewsDetail(this)"
+             onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(169, 159, 255, 0.45)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.35)';"
+             onmouseout="this.style.transform='none'; this.style.borderColor='rgba(220, 214, 255, 0.16)'; this.style.boxShadow='none';">
+            <div>
+                {% if n.image %}
+                <div style="width: 100%; height: 185px; overflow: hidden; border-radius: 12px; margin-bottom: 16px; background: rgba(0,0,0,0.3);">
+                    <img src="{{ n.image }}" alt="{{ n.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+                </div>
+                {% endif %}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        {% if n.category == 'Элсэлт' %}
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">{{ n.category }}</span>
+                        {% elif n.category == 'Тэтгэлэг' %}
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(245, 158, 11, 0.2); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.4);">{{ n.category }}</span>
+                        {% elif n.category == 'Олон улс' %}
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(14, 165, 233, 0.2); color: #bae6fd; border: 1px solid rgba(14, 165, 233, 0.4);">{{ n.category }}</span>
+                        {% elif n.category == 'Оюутны амьдрал' %}
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(34, 197, 94, 0.2); color: #bbf7d0; border: 1px solid rgba(34, 197, 94, 0.4);">{{ n.category }}</span>
+                        {% else %}
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(168, 85, 247, 0.2); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.4);">{{ n.category }}</span>
+                        {% endif %}
+                    </div>
+                    <span style="color: #94a3b8; font-size: 12px; display: inline-flex; align-items: center; gap: 5px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                        {{ n.created_at[:10] if n.created_at else '' }}
+                    </span>
+                </div>
+                <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 17px; line-height: 1.4; font-weight: 700;">
+                    {{ n.title }}
+                </h3>
+                <p style="margin: 0 0 18px; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">
+                    {{ n.summary }}
+                </p>
+            </div>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #a99fff; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                    Дэлгэрэнгүй унших →
+                </span>
+            </div>
+        </div>
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1); color: #94a3b8;">
+            Одоогоор нийтлэгдсэн мэдээ алга байна.
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- WHY US -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ДАВУУ ТАЛ</span>
+            <h2>Яагаад Их Засаг коллеж гэж?</h2>
+            <p>Оюутан бүрт чанартай боловсрол, бодит дадлага туршлага олгоно.</p>
+        </div>
+    </div>
+
+    <div class="why-grid">
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+            </div>
+            <h3>25+ жилийн туршлага</h3>
+            <p>Монголын боловсролын салбарт тэргүүлэгч Их Засаг Олон Улсын Их Сургуулийн нэр хүндтэй салбар коллеж.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3>95% Ажил эрхлэлт</h3>
+            <p>Төгсөгчдийн 95 хувь нь төгссөн чиглэлээрээ шууд ажлын байртай болдог.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>Олон улсын хөтөлбөр</h3>
+            <p>1+1 болон 2+2 хөтөлбөрөөр гадаадын түнш их сургуулиудад суралцах боломжтой.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3>Улсын баталгаат диплом</h3>
+            <p>Боловсрол, Шинжлэх Ухааны Яамны албан ёсны магадлан итгэмжлэгдсэн диплом олгодог.</p>
+        </div>
+    </div>
+</section>
+
+<!-- КАМПУС БА СУРГАЛТЫН ОРЧИН -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(231, 185, 94, 0.3); border-radius: 20px; padding: 48px; box-shadow: 0 16px 40px rgba(0,0,0,0.3); backdrop-filter: blur(8px);">
+        <div style="max-width: 800px;">
+            <span class="eyebrow">ИХ ЗАСАГ ЦОГЦОЛБОР</span>
+            <h2 style="color: #ffffff; font-size: 28px; margin: 8px 0 14px;">Орчин үеийн сургалтын таатай орчин</h2>
+            <p style="color: #cfc8ff; line-height: 1.8; margin: 0 0 24px; font-size: 15px;">
+                Манай коллеж нь Улаанбаатар хотын Баянзүрх дүүрэгт байрлах Их Засаг цогцолборт үйл ажиллагаа явуулдаг бөгөөд мэргэжлийн дадлагын лаборатори, номын сан, соёлын төв, спорт заал, оюутны дотуур байраар бүрэн хангагдсан.
+            </p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px;">
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px;">
+                    <div style="color: #a99fff; margin-bottom: 6px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z"/></svg>
+                    </div>
+                    <strong style="color: #ffffff; font-size: 14px;">Төв цогцолбор байр</strong>
+                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Бүх танхим, лаборатори нэг дор</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px;">
+                    <div style="color: #a99fff; margin-bottom: 6px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                    </div>
+                    <strong style="color: #ffffff; font-size: 14px;">МТ Лаборатори</strong>
+                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Орчин үеийн компьютер техник</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px;">
+                    <div style="color: #a99fff; margin-bottom: 6px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    <strong style="color: #ffffff; font-size: 14px;">Дадлагын бааз</strong>
+                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Стандартын гал тогоо, урлан</p>
+                </div>
+            </div>
+            <div>
+                <a class="btn-primary" href="{{ url_for('about') }}">Бидний тухай илүү үзэх →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ТЭТГЭЛЭГ БА ДЭМЖЛЭГҮҮД -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ОЮУТНЫГ ДЭМЖИХ БОДЛОГО</span>
+            <h2>Тэтгэлэг ба хөнгөлөлтүүд</h2>
+            <p>Суралцагч бүрийн хичээл зүтгэл, нийгмийн боломжийг дэмжих цогц хөтөлбөрүүд</p>
+        </div>
+    </div>
+
+    <div class="why-grid">
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            </div>
+            <h3>200,000₮ Сар бүрийн тэтгэлэг</h3>
+            <p>Мэргэжлийн боловсрол сургалтыг дэмжих сангаас 9-р анги төгссөн суралцагч бүрт сар бүр 200,000₮-ийн тэтгэлэг олгоно.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <h3>Сурлагын амжилтын тэтгэлэг</h3>
+            <p>Урлаг, спорт, олимпиад болон сурлагаараа онцгой амжилт гаргасан оюутнуудад сургалтын төлбөрийн 20–50% хөнгөлөлт үзүүлдэг.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Нэг гэр бүлийн хөнгөлөлт</h3>
+            <p>Нэг гэр бүлээс Их Засаг ОУИС болон харьяа сургуулиудад 2 болон түүнээс дээш хүүхэд суралцаж буй тохиолдолд төлбөрийн 10–20% хөнгөлнө.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon" style="color: #e7b95e; margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(231, 185, 94, 0.12); border: 1px solid rgba(231, 185, 94, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <h3>"Супер студент" олон улсын тэтгэлэг</h3>
+            <p>Шилдэг оюутнуудыг БНСУ болон гадаадын түнш сургуулиудад 100% тэтгэлэгтэй цалинтай дадлага хийх хөтөлбөрт хамруулдаг.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ЭЛСЭХ 3 АЛХАМ -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ЭЛСЭЛТИЙН ДАРААЛАЛ</span>
+            <h2>Коллежид элсэхэд ердөө 3 алхам</h2>
+            <p>Хялбар, хурдан бөгөөд цахим бүртгэлээр цагаа хэмнээрэй</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
+            <div style="font-size: 32px; font-weight: 800; color: #a99fff; margin-bottom: 12px;">01</div>
+            <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Мэргэжлээ сонгох</h3>
+            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Манай 17 мэргэжлийн чиглэлтэй танилцаж, өөрийн хүсэл сонирхолд нийцсэн хөтөлбөрөө сонгоно.</p>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
+            <div style="font-size: 32px; font-weight: 800; color: #e7b95e; margin-bottom: 12px;">02</div>
+            <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Цахимаар бүртгүүлэх</h3>
+            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Элсэлтийн анкетыг 1 минутад багтаан бөглөж илгээнэ. Элсэлтийн зөвлөх тантай 24 цагийн дотор холбогдоно.</p>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
+            <div style="font-size: 32px; font-weight: 800; color: #7a6ff0; margin-bottom: 12px;">03</div>
+            <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Баталгаажуулж эхлэх</h3>
+            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Шаардлагатай баримт бичгээ авчран сургалтын гэрээгээ байгуулж, Их Засаг коллежийн оюутан болно.</p>
+        </div>
+    </div>
+</section>
+
+<!-- БАГШ, УДИРДЛАГЫН ТӨЛӨӨЛӨЛ -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">МЭРГЭШСЭН БАГ ХАМТ ОЛОН</span>
+            <h2>Удирдлага ба зөвлөх багш нар</h2>
+            <p>Оюутан бүрийн ур чадварыг нээн хөгжүүлэх туршлагатай багш, сурган хүмүүжүүлэгчид</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a class="text-link" href="{{ url_for('about') }}#team-section">Бүх багш нарыг харах →</a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px;">
+        {% for t in teachers %}
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.18); border-radius: 16px; padding: 24px; text-align: center; backdrop-filter: blur(8px);">
+            {% if t.photo %}
+            <div style="width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%; border: 2px solid #e7b95e; overflow: hidden; background: #1a2a44;">
+                <img src="{{ t.photo }}" alt="{{ t.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            {% else %}
+            <div style="width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%; border: 2px solid #a99fff; background: linear-gradient(135deg, #322d59, #1b1638); display: flex; align-items: center; justify-content: center;">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cfc8ff" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            {% endif %}
+            <h4 style="margin: 0; color: #ffffff; font-size: 17px;">{{ t.name }}</h4>
+            <span style="color: #e7b95e; font-weight: 700; font-size: 13px; display: block; margin-top: 4px;">{{ t.role }}</span>
+            <p style="margin: 5px 0 0; font-size: 12px; color: #cfc8ff;">{{ t.degree }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ТҮГЭЭМЭЛ АСУУЛТ ХАРИУЛТ (FAQ) -->
+<section class="section container" id="faq-section" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ТУСЛАМЖ & МЭДЭЭЛЭЛ</span>
+            <h2>Түгээмэл асуулт хариултууд</h2>
+            <p>Элсэгчид болон эцэг эхчүүдийн хамгийн их тодруулдаг асуултуудын хариулт</p>
+        </div>
+    </div>
+
+    <div style="max-width: 860px; margin: 0 auto;">
+        {% for f in faqs %}
+        <details style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 14px; margin-bottom: 14px; overflow: hidden; backdrop-filter: blur(8px);">
+            <summary style="padding: 18px 24px; font-weight: 600; color: #ffffff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; user-select: none;">
+                <span>{{ f.question }}</span>
+                <span style="color: #a99fff; font-size: 14px;">›</span>
+            </summary>
+            <div style="padding: 0 24px 20px; color: #cfc8ff; font-size: 14.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.06); white-space: pre-line;">{{ f.answer }}</div>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="callout" style="position: relative; z-index: 2;">
+    <div class="container callout-content">
+        <div>
+            <span class="eyebrow">ЧИНИЙ ИРЭЭДҮЙ ЭНДЭЭС</span>
+            <h2>Элсэлтээ эхлүүлэхэд бэлэн үү?</h2>
+            <p>Сонирхсон мэргэжлээ сонгоод элсэлтийн онлайн бүртгэлийг бөглөөрэй.</p>
+        </div>
+        <a class="btn-primary" href="{{ url_for('apply') }}">Бүртгүүлэх →</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block modal %}
+<!-- МЭДЭЭНИЙ ДЭЛГЭРЭНГҮЙ ЦОНХ (MODAL) -->
+<div id="newsDetailModal" class="modal-backdrop" onclick="closeNewsDetailOnBackdrop(event)" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(4, 5, 18, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); align-items: center; justify-content: center; z-index: 999999; padding: 20px; box-sizing: border-box;">
+    <div style="background: linear-gradient(145deg, #121929 0%, #0a0f1d 100%); color: #f8fafc; border: 1px solid rgba(231, 185, 94, 0.4); border-radius: 20px; width: 100%; max-width: 640px; max-height: calc(100vh - 60px); display: flex; flex-direction: column; box-shadow: 0 30px 70px rgba(0,0,0,0.85), 0 0 35px rgba(124, 108, 246, 0.25); overflow: hidden; animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+        <div style="padding: 22px 26px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span id="ndCategory" style="display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(124, 108, 246, 0.25); color: #cfc8ff; border: 1px solid rgba(124, 108, 246, 0.4);">Зарлал</span>
+                    <span id="ndDate" style="color: #94a3b8; font-size: 12px; margin-left: 6px;"></span>
+                </div>
+                <h3 id="ndTitle" style="margin: 0; font-size: 20px; color: #ffffff; line-height: 1.4; font-weight: 700;"></h3>
+            </div>
+            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); color: #cfc8ff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" aria-label="Хаах">×</button>
+        </div>
+        <div style="padding: 22px 26px; overflow-y: auto; flex: 1;">
+            <div id="ndImageBox" style="display: none; width: 100%; max-height: 300px; overflow: hidden; border-radius: 12px; margin-bottom: 18px; background: rgba(0,0,0,0.3);">
+                <img id="ndImage" src="" alt="News Image" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div id="ndContent" style="color: #e2e8f0; font-size: 15px; line-height: 1.8; white-space: pre-line;"></div>
+        </div>
+        <div style="padding: 14px 26px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; background: rgba(8, 12, 24, 0.75);">
+            <a href="{{ url_for('apply') }}" class="btn-primary" style="padding: 8px 18px; font-size: 13.5px;">Элсэлтийн бүртгэл →</a>
+            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); color: #cfc8ff; border: 1px solid rgba(255, 255, 255, 0.18); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13.5px;">Хаах</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showNewsDetail(el) {
+    const title = el.dataset.title || '';
+    const category = el.dataset.category || '';
+    const image = el.dataset.image || '';
+    const content = el.dataset.content || '';
+    const date = el.dataset.date || '';
+
+    document.getElementById('ndTitle').textContent = title;
+    document.getElementById('ndCategory').textContent = category;
+    document.getElementById('ndContent').textContent = content;
+    document.getElementById('ndDate').textContent = date ? date.substring(0, 10) : '';
+
+    const imgBox = document.getElementById('ndImageBox');
+    const img = document.getElementById('ndImage');
+    if (image) {
+        img.src = image;
+        imgBox.style.display = 'block';
+    } else {
+        imgBox.style.display = 'none';
+        img.src = '';
+    }
+    
+    const m = document.getElementById('newsDetailModal');
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeNewsDetail() {
+    const m = document.getElementById('newsDetailModal');
+    if (m) m.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function closeNewsDetailOnBackdrop(e) {
+    if (e.target.id === 'newsDetailModal') {
+        closeNewsDetail();
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeNewsDetail();
+    }
+});
+</script>
+{% endblock %}

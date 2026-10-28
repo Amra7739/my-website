@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Админ нэвтрэх | Их Засаг коллеж{% endblock %}
+
+{% block content %}
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        position: relative;
+        padding: 40px 0;
+    }
+    
+    .login-card {
+        background: #121824;
+        padding: 40px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 2px solid #2a3447;
+        transition: all 0.4s ease;
+        position: relative;
+    }
+    
+    /* Неон гэрэл асаалттай байх үеийн эффект (ON) */
+    .login-card.neon-active {
+        border-color: #00f0ff;
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+    .login-card.neon-active h2 {
+        color: #00f0ff;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+    }
+    .login-card.neon-active input {
+        border-color: #00f0ff;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        color: #00f0ff;
+    }
+    .login-card.neon-active .login-btn {
+        background: #00f0ff;
+        color: #0b0f19;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+    }
+
+    .login-card h2 {
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #94a3b8;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 15px;
+        outline: none;
+        transition: 0.3s;
+        box-sizing: border-box;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: #e7b95e;
+        color: #10243b;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .login-btn:hover {
+        opacity: 0.9;
+    }
+
+    /* Баруун талын ON/OFF Toggle Switch загвар */
+    .toggle-container {
+        position: absolute;
+        right: -65px;
+        top: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    .toggle-label {
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 68px;
+    }
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #1e293b;
+        border: 2px solid #334155;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #00f0ff;
+        border-color: #00f0ff;
+        box-shadow: 0 0 12px #00f0ff;
+    }
+    input:checked + .slider:before {
+        transform: translateY(30px);
+        background-color: #0b0f19;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        text-align: center;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card" id="loginCard">
+        <!-- ON/OFF Шилжүүлэгч -->
+        <div class="toggle-container">
+            <span class="toggle-label" id="statusLabel">OFF</span>
+            <label class="switch">
+                <input type="checkbox" id="neonToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <h2>Login</h2>
+
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-error">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('admin_login') }}">
+            <div class="form-group">
+                <label>Нэвтрэх нэр (Username)</label>
+                <input type="text" name="username" required placeholder="admin">
+            </div>
+
+            <div class="form-group">
+                <label>Нууц үг (Password)</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const toggle = document.getElementById('neonToggle');
+    const card = document.getElementById('loginCard');
+    const statusLabel = document.getElementById('statusLabel');
+
+    toggle.addEventListener('change', function() {
+        if (this.checked) {
+            card.classList.add('neon-active');
+            statusLabel.textContent = 'ON';
+            statusLabel.style.color = '#00f0ff';
+            statusLabel.style.textShadow = '0 0 8px #00f0ff';
+        } else {
+            card.classList.remove('neon-active');
+            statusLabel.textContent = 'OFF';
+            statusLabel.style.color = '#ffffff';
+            statusLabel.style.textShadow = 'none';
+        }
+    });
+</script>
+{% endblock %}

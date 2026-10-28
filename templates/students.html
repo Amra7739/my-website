@@ -1,0 +1,151 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Мэргэжлүүд | Их Засаг Политехник Коллеж{% endblock %}
+
+{% block content %}
+<!-- BANNER -->
+<section class="page-banner" style="position: relative; z-index: 2;">
+    <div class="container">
+        <span class="eyebrow">СУРГАЛТЫН ХӨТӨЛБӨРҮҮД</span>
+        <h1>Мэргэжлийн боловсрол олгох<br><span>{{ majors|length }} чиглэлийн хөтөлбөр</span></h1>
+        <p>Хөдөлмөрийн зах зээлийн эрэлт хэрэгцээнд нийцсэн чанартай мэргэжил эзэмшиж, ирээдүйн бат бэх гараагаа эхлүүлээрэй.</p>
+    </div>
+</section>
+
+<!-- FILTER TABS & SEARCH -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+        <div class="major-filter" style="margin-bottom: 0;">
+            <button class="filter-btn active" onclick="filterMajors('all', this)">Бүгд ({{ majors|length }})</button>
+            <button class="filter-btn" onclick="filterMajors('design', this)">Дизайн ({{ majors|selectattr('category', 'equalto', 'design')|list|length }})</button>
+            <button class="filter-btn" onclick="filterMajors('service', this)">Үйлчилгээ ({{ majors|selectattr('category', 'equalto', 'service')|list|length }})</button>
+            <button class="filter-btn" onclick="filterMajors('health', this)">Эрүүл мэнд ({{ majors|selectattr('category', 'equalto', 'health')|list|length }})</button>
+            <button class="filter-btn" onclick="filterMajors('business', this)">Бизнес ({{ majors|selectattr('category', 'equalto', 'business')|list|length }})</button>
+            <button class="filter-btn" onclick="filterMajors('tech', this)">Технологи ({{ majors|selectattr('category', 'equalto', 'tech')|list|length }})</button>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div style="position: relative; min-width: 250px; max-width: 320px;">
+                <input type="text" id="studentsSearchInput" oninput="searchStudentsMajors()" 
+                       placeholder="Мэргэжил хайх..." 
+                       style="width: 100%; padding: 10px 18px; border-radius: 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(220,214,255,0.25); color: #ffffff; font-size: 14px; outline: none; backdrop-filter: blur(8px); box-sizing: border-box;">
+            </div>
+        </div>
+    </div>
+
+    <div class="major-grid" id="majorGrid">
+        {% for m in majors %}
+        <a class="major-card" href="{{ url_for('apply') }}?major={{ m.name | urlencode }}" data-cat="{{ m.category }}" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div class="major-icon" style="color: #a99fff; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(169, 159, 255, 0.12); border: 1px solid rgba(169, 159, 255, 0.3);">
+                        {% if m.category == 'design' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                        {% elif m.category == 'tech' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                        {% elif m.category == 'health' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        {% elif m.category == 'business' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+                        {% else %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg>
+                        {% endif %}
+                    </div>
+                    <span style="background: rgba(231,185,94,0.12); color: #f5d995; border: 1px solid rgba(231,185,94,0.3); font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600;">{{ m.stipend }}</span>
+                </div>
+
+                <h3>{{ m.name }}</h3>
+                <p style="margin-bottom: 8px; font-weight: 600; color: #e2e8f0;">Хугацаа: {{ m.duration }} · {{ m.base_edu }} суурьтай</p>
+                <p style="font-size: 13px; color: #cfc8ff; line-height: 1.55; margin-bottom: 12px;">{{ m.description }}</p>
+                {% if m.career %}
+                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px;">
+                    <strong style="color: #b7aeff;">Ажлын байр:</strong> {{ m.career }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="major-meta" style="margin-top: auto;">
+                <span class="major-badge">{{ m.category_label }}</span>
+                <span class="card-link">Бүртгүүлэх →</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ОЮУТНЫ АМЬДРАЛ, ДОТУУР БАЙР БА КЛУБУУД -->
+<section class="section container" style="position: relative; z-index: 2;">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ОЮУТНЫ ХӨГЖИЛ БА ОРЧИН</span>
+            <h2>Суралцагчдад зориулсан боломжууд</h2>
+            <p>Хичээл сургалтаас гадна хувь хүний хөгжил, тав тухтай орчныг бүрэн бүрдүүлсэн</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px;">
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(220,214,255,0.16); border-radius: 16px; padding: 24px; backdrop-filter: blur(8px);">
+            <div style="color: #e7b95e; margin-bottom: 12px; width: 42px; height: 42px; border-radius: 10px; background: rgba(231,185,94,0.12); border: 1px solid rgba(231,185,94,0.3); display: inline-flex; align-items: center; justify-content: center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z"/></svg>
+            </div>
+            <h4 style="margin: 0 0 8px; color: #ffffff; font-size: 17px;">Тохилог оюутны дотуур байр</h4>
+            <p style="margin: 0; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">Сургуулийн кампусын дэргэд 400 ортой, өндөр хурдны Wi-Fi, уншлагын танхим, гал тогоо, халуун ус, 24 цагийн харуул хамгаалалттай дотуур байр ажилладаг.</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(220,214,255,0.16); border-radius: 16px; padding: 24px; backdrop-filter: blur(8px);">
+            <div style="color: #a99fff; margin-bottom: 12px; width: 42px; height: 42px; border-radius: 10px; background: rgba(169,159,255,0.12); border: 1px solid rgba(169,159,255,0.3); display: inline-flex; align-items: center; justify-content: center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <h4 style="margin: 0 0 8px; color: #ffffff; font-size: 17px;">Төв номын сан & Цахим сан</h4>
+            <p style="margin: 0; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">Мэргэжлийн сурах бичиг, гарын авлага болон цахим номын сангаар үйлчлүүлэх, бие даан хичээллэх тав тухтай уншлагын танхимуудтай.</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(220,214,255,0.16); border-radius: 16px; padding: 24px; backdrop-filter: blur(8px);">
+            <div style="color: #e7b95e; margin-bottom: 12px; width: 42px; height: 42px; border-radius: 10px; background: rgba(231,185,94,0.12); border: 1px solid rgba(231,185,94,0.3); display: inline-flex; align-items: center; justify-content: center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+            </div>
+            <h4 style="margin: 0 0 8px; color: #ffffff; font-size: 17px;">Дугуйлан, клуб ба Спортын заал</h4>
+            <p style="margin: 0; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">Сагсан бөмбөг, гар бөмбөг, бүжиг, уран зураг, загвар зохион бүтээлт, IT клубууд болон Оюутны зөвлөл тогтмол үйл ажиллагаа явуулдаг.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="callout" style="position: relative; z-index: 2;">
+    <div class="container callout-content">
+        <div>
+            <span class="eyebrow">ДАРААГИЙН АЛХАМ</span>
+            <h2>Мэргэжлээ сонгосон уу?</h2>
+            <p>Одоо элсэлтийн бүртгэлийг бөглөж, ирээдүйгээ эхлүүл.</p>
+        </div>
+        <a class="btn-primary" href="{{ url_for('apply') }}">Элсэх бүртгэл →</a>
+    </div>
+</section>
+
+<script>
+function filterMajors(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    document.querySelectorAll('#majorGrid .major-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function searchStudentsMajors() {
+    const q = document.getElementById('studentsSearchInput').value.toLowerCase().trim();
+    document.querySelectorAll('#majorGrid .major-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(q)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}
