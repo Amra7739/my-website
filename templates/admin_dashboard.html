@@ -35,7 +35,7 @@
     .adm-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
     .adm-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(231,185,94,0.3); padding: 14px 20px; border-radius: 12px; backdrop-filter: blur(8px); min-width: 140px; }
     .adm-stat b { display: block; font-size: 24px; color: #e7b95e; line-height: 1.2; }
-    .adm-stat span { font-size: 12.5px; color: #cfc8ff; }
+    .adm-stat span { font-size: 12.5px; color: #e2e8f0; }
 
     .adm-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
     .adm-search {
@@ -94,7 +94,7 @@
     }
     .adm-tab-btn {
         background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14);
-        color: #cfc8ff; padding: 10px 16px; border-radius: 11px; font-size: 13.5px; font-weight: 700;
+        color: #e2e8f0; padding: 10px 16px; border-radius: 11px; font-size: 13.5px; font-weight: 700;
         cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;
     }
     .adm-tab-btn:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
@@ -130,7 +130,7 @@
         display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;
     }
     .settings-field label {
-        display: block; font-size: 13px; font-weight: 600; color: #cfc8ff; margin-bottom: 6px;
+        display: block; font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px;
     }
     .settings-field input, .settings-field textarea {
         width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(220,214,255,0.22);
@@ -345,7 +345,7 @@
                             {% if t.photo %}
                                 <img src="{{ t.photo }}" alt="{{ t.name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #e7b95e;">
                             {% else %}
-                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #1e293b; color: #cfc8ff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
+                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #1e293b; color: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
                                     {{ t.name[:1] }}
                                 </div>
                             {% endif %}
@@ -777,12 +777,12 @@
     .modal-header h3 { margin: 0; font-size: 18px; color: #ffffff; font-weight: 700; }
     .modal-close-icon {
         background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #cfc8ff; width: 32px; height: 32px; border-radius: 50%;
+        color: #e2e8f0; width: 32px; height: 32px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;
     }
     .modal-close-icon:hover { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
     .modal-body { padding: 18px 26px; overflow-y: auto; flex: 1; }
-    .modal-body label { display: block; font-size: 13px; font-weight: 600; color: #cfc8ff; margin-top: 12px; margin-bottom: 5px; }
+    .modal-body label { display: block; font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 12px; margin-bottom: 5px; }
     .modal-body label:first-child { margin-top: 0; }
     .modal-body input, .modal-body select, .modal-body textarea {
         width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
@@ -798,7 +798,7 @@
         display: flex; justify-content: flex-end; gap: 12px; flex-shrink: 0; background: rgba(8, 12, 24, 0.75);
     }
     .modal-btn-cancel {
-        background: rgba(255, 255, 255, 0.06); color: #cfc8ff; border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.18);
         padding: 9px 18px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 13.5px;
     }
     .modal-btn-submit {

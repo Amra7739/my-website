@@ -3,20 +3,20 @@
 :root {
     /* Үндсэн нил ягаан өнгөнүүд */
     --accent: #7c6cf6;          /* Товч, идэвхтэй элемент */
-    --accent-light: #b3a8ff;    /* Гарчгийн тодотгол, hover */
+    --accent-light: #c4b5fd;    /* Гарчгийн тодотгол, hover */
     --accent-dark: #5b4fd6;     /* Gradient-ийн бараан тал */
     --accent-glow: rgba(124, 108, 246, 0.45);
     --accent-soft: rgba(124, 108, 246, 0.14);
 
     /* Фон ба текст */
     --bg: #07061a;
-    --surface: rgba(255, 255, 255, 0.04);       /* Glass карт */
-    --surface-hover: rgba(255, 255, 255, 0.07);
-    --border: rgba(255, 255, 255, 0.09);
-    --border-strong: rgba(255, 255, 255, 0.18);
-    --text: #f4f3ff;            /* Гарчиг */
-    --text-soft: #c9c6e4;       /* Энгийн текст */
-    --muted: #8f8bb0;           /* Тайлбар текст */
+    --surface: rgba(13, 17, 34, 0.90);       /* Glass карт */
+    --surface-hover: rgba(22, 28, 54, 0.96);
+    --border: rgba(255, 255, 255, 0.18);
+    --border-strong: rgba(220, 214, 255, 0.35);
+    --text: #ffffff;            /* Гарчиг */
+    --text-soft: #f1f5f9;       /* Энгийн текст */
+    --muted: #cbd5e1;           /* Тайлбар текст */
 
     --radius: 18px;
     --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
@@ -73,8 +73,12 @@ body {
     padding: 0;
     background-color: var(--bg);
     color: var(--text);
-    font-family: 'Inter', 'Noto Sans Mongolian', Arial, sans-serif;
-    line-height: 1.7;
+    font-family: 'Inter', 'Noto Sans Mongolian', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 header, section, .hero, .hero-section {
@@ -129,15 +133,18 @@ select {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(179, 168, 255, 0.45);
-    box-shadow: 0 0 0 3px var(--accent-soft);
+    object-fit: contain;
+    background: #ffffff;
+    padding: 2px;
+    border: 2px solid rgba(231, 185, 94, 0.5);
+    box-shadow: 0 0 0 3px rgba(231, 185, 94, 0.2), 0 4px 12px rgba(0, 0, 0, 0.35);
     flex-shrink: 0;
-    transition: box-shadow 0.2s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .logo:hover .logo-img {
-    box-shadow: 0 0 0 4px rgba(124, 108, 246, 0.35), 0 0 18px var(--accent-glow);
+    transform: scale(1.06);
+    box-shadow: 0 0 0 4px rgba(231, 185, 94, 0.45), 0 0 20px rgba(231, 185, 94, 0.35);
 }
 
 .logo-text {
@@ -1310,4 +1317,102 @@ a.major-card {
 .btn-secondary:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.08);
+}
+
+/* === GLOBAL READABILITY OVERHAUL === */
+h1, h2, h3, h4, h5, h6,
+.hero h1, .page-banner h1, .section-heading h2 {
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 0 1px rgba(0, 0, 0, 0.95);
+}
+
+.hero p, .page-banner p, .section-heading p {
+    color: #f1f5f9 !important;
+    font-size: 17.5px !important;
+    line-height: 1.75 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.eyebrow {
+    color: #fcd34d !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9) !important;
+}
+
+.major-card, .why-card, .team-card, .value-card, .info-panel, .form-card, .director-greeting-card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(16px) !important;
+}
+
+.major-card:hover, .why-card:hover, .team-card:hover, .value-card:hover {
+    background: var(--surface-hover) !important;
+    border-color: rgba(196, 181, 253, 0.5) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65) !important;
+}
+
+.major-card h3, .why-card h3, .team-card h4, .timeline-body h4 {
+    font-size: 19.5px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin-bottom: 10px !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.major-card p, .why-card p, .team-card p, .timeline-body p {
+    font-size: 14.5px !important;
+    line-height: 1.65 !important;
+    color: var(--muted) !important;
+}
+
+.stat-number {
+    font-size: 38px !important;
+    font-weight: 900 !important;
+    color: #fcd34d !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.stat-label {
+    font-size: 14.5px !important;
+    color: #e2e8f0 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+}
+
+.btn-primary, .btn-secondary {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+    min-height: 52px !important;
+    padding: 13px 36px !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+.navigation a {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #f1f5f9 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.filter-btn {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    padding: 10px 20px !important;
+    background: rgba(13, 17, 34, 0.85) !important;
+    color: #f1f5f9 !important;
+    border: 1px solid rgba(220, 214, 255, 0.28) !important;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #8b7cf8, var(--accent-dark)) !important;
+    border-color: rgba(196, 181, 253, 0.6) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }

@@ -1,5 +1,7 @@
 ﻿from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 import sqlite3
+import os
+import contextlib
 from pathlib import Path
 import csv
 import io
@@ -9,6 +11,113 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "ih-zasag-college-secret-key"
+
+DATABASE = Path(__file__).resolve().parent / "college.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+
+class UnifiedCursor:
+    def __init__(self, raw_cur, is_pg=False):
+        self._cur = raw_cur
+        self._is_pg = is_pg
+
+    def execute(self, sql, params=None):
+        if self._is_pg:
+            adapted_sql = self._adapt_sql(sql)
+            if params is not None:
+                return self._cur.execute(adapted_sql, params)
+            return self._cur.execute(adapted_sql)
+        else:
+            if params is not None:
+                return self._cur.execute(sql, params)
+            return self._cur.execute(sql)
+
+    def executemany(self, sql, seq_of_params):
+        if self._is_pg:
+            adapted_sql = self._adapt_sql(sql)
+            return self._cur.executemany(adapted_sql, seq_of_params)
+        return self._cur.executemany(sql, seq_of_params)
+
+    def _adapt_sql(self, sql):
+        s = sql.replace("INTEGER PRIMARY KEY AUTOINCREMENT", "SERIAL PRIMARY KEY")
+        s = s.replace("INTEGER PRIMARY KEY", "SERIAL PRIMARY KEY")
+        if "ADD COLUMN " in s and "ADD COLUMN IF NOT EXISTS " not in s:
+            s = s.replace("ADD COLUMN ", "ADD COLUMN IF NOT EXISTS ")
+        if "INSERT OR IGNORE INTO site_settings" in s:
+            s = s.replace("INSERT OR IGNORE INTO site_settings", "INSERT INTO site_settings")
+            if "ON CONFLICT" not in s:
+                s += " ON CONFLICT (key) DO NOTHING"
+        s = s.replace("?", "%s")
+        return s
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    @property
+    def lastrowid(self):
+        return getattr(self._cur, "lastrowid", None)
+
+
+class UnifiedConnection:
+    def __init__(self, raw_conn, is_pg=False):
+        self._conn = raw_conn
+        self._is_pg = is_pg
+
+    def cursor(self):
+        if self._is_pg:
+            import psycopg2.extras
+            return UnifiedCursor(self._conn.cursor(cursor_factory=psycopg2.extras.DictCursor), is_pg=True)
+        return UnifiedCursor(self._conn.cursor(), is_pg=False)
+
+    def execute(self, sql, params=None):
+        cur = self.cursor()
+        cur.execute(sql, params)
+        return cur
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def close(self):
+        return self._conn.close()
+
+    @property
+    def row_factory(self):
+        return getattr(self._conn, "row_factory", None)
+
+    @row_factory.setter
+    def row_factory(self, val):
+        if not self._is_pg:
+            self._conn.row_factory = val
+
+
+@contextlib.contextmanager
+def get_db():
+    if DATABASE_URL:
+        import psycopg2
+        raw_conn = psycopg2.connect(DATABASE_URL)
+        conn = UnifiedConnection(raw_conn, is_pg=True)
+        try:
+            yield conn
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+    else:
+        with sqlite3.connect(DATABASE) as raw_conn:
+            raw_conn.row_factory = sqlite3.Row
+            conn = UnifiedConnection(raw_conn, is_pg=False)
+            yield conn
+
 
 @app.before_request
 def sync_static_assets():
@@ -22,7 +131,8 @@ def sync_static_assets():
                 "news_horog.png", "news_tsever_bichig.png", "news_altan_honh.png", "news_sagsan_bumbug.png",
                 "teacher_dorjkhand.png", "teacher_gantsetseg.png", "teacher_oyungerel.png",
                 "teacher_temuulen.png", "teacher_enkhtuya.png", "teacher_sarangerel.png",
-                "teacher_munkherdene.png", "teacher_oyunerdene.png", "teacher_nyamsuren.png"
+                "teacher_munkherdene.png", "teacher_oyunerdene.png", "teacher_nyamsuren.png",
+                "logo.png", "logo.jpg", "logo_full.png", "logo_transparent.png", "logo_emblem_transparent.png"
             ]:
                 s, d = src_static / img_name, dst_static / img_name
                 if s.exists():
@@ -30,8 +140,6 @@ def sync_static_assets():
                         shutil.copy2(s, d)
     except Exception:
         pass
-
-DATABASE = Path(__file__).resolve().parent / "college.db"
 UPLOAD_FOLDER = Path(__file__).resolve().parent / "static" / "uploads"
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'}
@@ -85,7 +193,8 @@ def init_db():
                 "davaadorj.png", "bolortuya.png", "bolortuya_full.png",
                 "teacher_dorjkhand.png", "teacher_gantsetseg.png", "teacher_oyungerel.png",
                 "teacher_temuulen.png", "teacher_enkhtuya.png", "teacher_sarangerel.png",
-                "teacher_munkherdene.png", "teacher_oyunerdene.png", "teacher_nyamsuren.png"
+                "teacher_munkherdene.png", "teacher_oyunerdene.png", "teacher_nyamsuren.png",
+                "logo.png", "logo.jpg", "logo_full.png", "logo_transparent.png", "logo_emblem_transparent.png"
             ]:
                 s, d = src_static / img_name, dst_static / img_name
                 if s.exists():
@@ -93,7 +202,7 @@ def init_db():
     except Exception:
         pass
 
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         # 1. Элсэлтийн бүртгэлийн хүснэгт
         conn.execute("""
             CREATE TABLE IF NOT EXISTS applications (
@@ -114,7 +223,7 @@ def init_db():
         ]:
             try:
                 conn.execute(col_sql)
-            except sqlite3.OperationalError:
+            except Exception:
                 pass
 
         # 2. Мэдээ, зарлалын хүснэгт
@@ -131,7 +240,7 @@ def init_db():
         """)
         try:
             conn.execute("ALTER TABLE news ADD COLUMN image TEXT")
-        except sqlite3.OperationalError:
+        except Exception:
             pass
 
         # 3. Багш, удирдлагын хүснэгт
@@ -594,12 +703,12 @@ def init_db():
 def get_site_settings():
     settings = dict(DEFAULT_SETTINGS)
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("SELECT key, value FROM site_settings").fetchall()
             for r in rows:
                 settings[r["key"]] = r["value"]
-    except sqlite3.Error:
+    except Exception:
         pass
     return settings
 
@@ -620,7 +729,7 @@ def inject_global_data():
 
 @app.route("/")
 def home():
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         news_list = conn.execute("SELECT id, title, category, summary, content, image, created_at FROM news ORDER BY id DESC").fetchall()
         featured_majors = conn.execute("SELECT * FROM majors WHERE featured = 1 ORDER BY id ASC LIMIT 6").fetchall()
@@ -633,7 +742,7 @@ def home():
 
 @app.route("/about")
 def about():
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         teachers = conn.execute("SELECT * FROM teachers ORDER BY id ASC").fetchall()
         faqs = conn.execute("SELECT id, question, answer FROM faqs ORDER BY id ASC").fetchall()
@@ -643,7 +752,7 @@ def about():
 
 @app.route("/students")
 def students():
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         majors = conn.execute("SELECT * FROM majors ORDER BY id ASC").fetchall()
     return render_template("students.html", majors=majors)
@@ -675,7 +784,7 @@ def apply():
             return redirect(url_for("apply"))
 
         try:
-            with sqlite3.connect(DATABASE) as conn:
+            with get_db() as conn:
                 conn.execute("""
                     INSERT INTO applications 
                     (fullname, birthdate, gender, major, phone, status) 
@@ -683,12 +792,12 @@ def apply():
                 """, (fullname, birthdate, gender, major, clean_phone))
                 conn.commit()
             flash(f"Баярлалаа, {fullname}! Таны элсэлтийн бүртгэл амжилттай хадгалагдлаа. Бид тантай удахгүй холбогдох болно.", "success")
-        except sqlite3.Error:
+        except Exception:
             flash("Бүртгэл хадгалахад алдаа гарлаа. Та дахин оролдоно уу.", "error")
 
         return redirect(url_for("apply"))
 
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         majors = conn.execute("SELECT * FROM majors ORDER BY id ASC").fetchall()
     return render_template("apply.html", majors=majors)
@@ -721,7 +830,7 @@ def admin_dashboard():
     if not session.get("admin_logged"):
         return redirect(url_for("admin_login"))
 
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         applications = conn.execute("""
             SELECT id, fullname, birthdate, gender, major, phone, status, notes, created_at
@@ -770,7 +879,7 @@ def admin_export():
     writer = csv.writer(output)
     writer.writerow(['ID', 'Овог, нэр', 'Төрсөн огноо', 'Хүйс', 'Мэргэжил', 'Утас', 'Төлөв', 'Тэмдэглэл', 'Бүртгүүлсэн огноо'])
 
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT id, fullname, birthdate, gender, major, phone, status, notes, created_at FROM applications ORDER BY id DESC")
         for row in cursor.fetchall():
@@ -814,7 +923,7 @@ def admin_add_application():
         return redirect(url_for("admin_dashboard"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 INSERT INTO applications 
                 (fullname, birthdate, gender, major, phone, status, notes) 
@@ -822,7 +931,7 @@ def admin_add_application():
             """, (fullname, birthdate, gender, major, clean_phone, status, notes))
             conn.commit()
         flash(f"'{fullname}' суралцагчийн бүртгэл амжилттай нэмэгдлээ.", "success")
-    except sqlite3.Error:
+    except Exception:
         flash("Бүртгэл нэмэхэд алдаа гарлаа.", "error")
 
     return redirect(url_for("admin_dashboard"))
@@ -858,7 +967,7 @@ def admin_edit_application(id):
         return redirect(url_for("admin_dashboard"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 UPDATE applications 
                 SET fullname = ?, birthdate = ?, gender = ?, major = ?, phone = ?, status = ?, notes = ?
@@ -866,7 +975,7 @@ def admin_edit_application(id):
             """, (fullname, birthdate, gender, major, clean_phone, status, notes, id))
             conn.commit()
         flash(f"ID #{id} бүртгэлийн мэдээлэл амжилттай шинэчлэгдлээ.", "success")
-    except sqlite3.Error:
+    except Exception:
         flash("Мэдээлэл засахад алдаа гарлаа.", "error")
 
     return redirect(url_for("admin_dashboard"))
@@ -877,7 +986,7 @@ def delete_application(id):
     if not session.get("admin_logged"):
         return redirect(url_for("admin_login"))
 
-    with sqlite3.connect(DATABASE) as conn:
+    with get_db() as conn:
         conn.execute("DELETE FROM applications WHERE id = ?", (id,))
         conn.commit()
 
@@ -897,11 +1006,11 @@ def admin_delete_selected():
 
     try:
         placeholders = ",".join("?" * len(selected_ids))
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute(f"DELETE FROM applications WHERE id IN ({placeholders})", selected_ids)
             conn.commit()
         flash(f"Сонгогдсон {len(selected_ids)} бүртгэл амжилттай устгагдлаа.", "success")
-    except sqlite3.Error:
+    except Exception:
         flash("Бүртгэлүүдийг устгахад алдаа гарлаа.", "error")
 
     return redirect(url_for("admin_dashboard"))
@@ -913,11 +1022,11 @@ def admin_clear_all():
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("DELETE FROM applications")
             conn.commit()
         flash("Бүх бүртгэлийн өгөгдөл амжилттай цэвэрлэгдлээ.", "success")
-    except sqlite3.Error:
+    except Exception:
         flash("Өгөгдөл цэвэрлэхэд алдаа гарлаа.", "error")
 
     return redirect(url_for("admin_dashboard"))
@@ -948,14 +1057,14 @@ def admin_add_teacher():
     photo_path = uploaded_photo if uploaded_photo else photo_url
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 INSERT INTO teachers (name, role, degree, department, experience_years, bio, email, phone, photo)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (name, role, degree, department, experience_years, bio, email, phone, photo_path))
             conn.commit()
         flash(f"'{name}' багшийн мэдээлэл амжилттай нэмэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Багш нэмэхэд алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=teachers")
@@ -984,7 +1093,7 @@ def admin_edit_teacher(id):
     new_photo = uploaded_photo if uploaded_photo else (photo_url if photo_url else None)
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             if new_photo is not None:
                 conn.execute("""
                     UPDATE teachers
@@ -999,7 +1108,7 @@ def admin_edit_teacher(id):
                 """, (name, role, degree, department, experience_years, bio, email, phone, id))
             conn.commit()
         flash(f"'{name}' багшийн мэдээлэл амжилттай шинэчлэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Багшийн мэдээлэл засахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=teachers")
@@ -1011,11 +1120,11 @@ def admin_delete_teacher(id):
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("DELETE FROM teachers WHERE id = ?", (id,))
             conn.commit()
         flash(f"ID #{id} багшийн бүртгэл устгагдлаа.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Устгахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=teachers")
@@ -1054,14 +1163,14 @@ def admin_add_major():
         return redirect(url_for("admin_dashboard") + "?tab=majors")
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 INSERT INTO majors (name, category, category_label, duration, base_edu, stipend, diploma, pathway, description, career, featured)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (name, category, category_label, duration, base_edu, stipend, diploma, pathway, description, career, featured))
             conn.commit()
         flash(f"'{name}' мэргэжил амжилттай нэмэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэргэжил нэмэхэд алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=majors")
@@ -1089,7 +1198,7 @@ def admin_edit_major(id):
         return redirect(url_for("admin_dashboard") + "?tab=majors")
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 UPDATE majors
                 SET name = ?, category = ?, category_label = ?, duration = ?, base_edu = ?, stipend = ?, diploma = ?, pathway = ?, description = ?, career = ?, featured = ?
@@ -1097,7 +1206,7 @@ def admin_edit_major(id):
             """, (name, category, category_label, duration, base_edu, stipend, diploma, pathway, description, career, featured, id))
             conn.commit()
         flash(f"'{name}' мэргэжлийн мэдээлэл шинэчлэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэргэжил засахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=majors")
@@ -1109,11 +1218,11 @@ def admin_delete_major(id):
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("DELETE FROM majors WHERE id = ?", (id,))
             conn.commit()
         flash(f"ID #{id} мэргэжил устгагдлаа.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэргэжил устгахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=majors")
@@ -1143,14 +1252,14 @@ def admin_add_news():
     image_path = uploaded_img if uploaded_img else image_url
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("""
                 INSERT INTO news (title, category, summary, content, image)
                 VALUES (?, ?, ?, ?, ?)
             """, (title, category, summary, content, image_path))
             conn.commit()
         flash(f"'{title}' мэдээ амжилттай нийтлэгдэж, вэбсайт дээр гарлаа!", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэдээ нийтлэхэд алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=news")
@@ -1178,7 +1287,7 @@ def admin_edit_news(id):
     new_image = uploaded_img if uploaded_img else (image_url if image_url else None)
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             if new_image is not None and new_image != "":
                 conn.execute("""
                     UPDATE news
@@ -1193,7 +1302,7 @@ def admin_edit_news(id):
                 """, (title, category, summary, content, id))
             conn.commit()
         flash(f"ID #{id} мэдээ амжилттай шинэчлэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэдээ засварлахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=news")
@@ -1205,11 +1314,11 @@ def admin_delete_news(id):
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("DELETE FROM news WHERE id = ?", (id,))
             conn.commit()
         flash(f"ID #{id} мэдээ амжилттай устгагдлаа.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Мэдээ устгахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=news")
@@ -1230,11 +1339,11 @@ def admin_add_faq():
         return redirect(url_for("admin_dashboard") + "?tab=faqs")
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("INSERT INTO faqs (question, answer) VALUES (?, ?)", (question, answer))
             conn.commit()
         flash("Түгээмэл асуулт амжилттай нэмэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Асуулт нэмэхэд алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=faqs")
@@ -1253,11 +1362,11 @@ def admin_edit_faq(id):
         return redirect(url_for("admin_dashboard") + "?tab=faqs")
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("UPDATE faqs SET question = ?, answer = ? WHERE id = ?", (question, answer, id))
             conn.commit()
         flash(f"ID #{id} асуулт хариулт шинэчлэгдлээ.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Асуулт засахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=faqs")
@@ -1269,11 +1378,11 @@ def admin_delete_faq(id):
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             conn.execute("DELETE FROM faqs WHERE id = ?", (id,))
             conn.commit()
         flash(f"ID #{id} асуулт устгагдлаа.", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Асуулт устгахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=faqs")
@@ -1287,14 +1396,14 @@ def admin_save_settings():
         return redirect(url_for("admin_login"))
 
     try:
-        with sqlite3.connect(DATABASE) as conn:
+        with get_db() as conn:
             for key in DEFAULT_SETTINGS.keys():
                 if key in request.form:
                     val = request.form.get(key, "").strip()
                     conn.execute("INSERT OR REPLACE INTO site_settings (key, value) VALUES (?, ?)", (key, val))
             conn.commit()
         flash("Сайтын ерөнхий мэдээлэл болон статистик амжилттай хадгалагдлаа!", "success")
-    except sqlite3.Error as e:
+    except Exception as e:
         flash(f"Тохиргоо хадгалахад алдаа гарлаа: {e}", "error")
 
     return redirect(url_for("admin_dashboard") + "?tab=settings")
@@ -1315,4 +1424,4 @@ def page_not_found(e):
 init_db()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

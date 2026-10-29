@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Их Засаг Политехник Коллеж{% endblock %}</title>
-    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logo.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}?v=3">
     <meta name="description" content="Их Засаг Политехник Коллеж - 2026-2027 оны элсэлтийн албан ёсны бүртгэл. Мэргэжлийн боловсрол, практик дадлага, ажлын байр.">
     <meta property="og:title" content="Их Засаг Политехник Коллеж">
     <meta property="og:description" content="Мэргэжлийн боловсрол · Шинэ боломж · Шинэ ирээдүй. Элсэлтийн бүртгэл явагдаж байна.">
-    <meta property="og:image" content="{{ url_for('static', filename='logo.jpg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta property="og:image" content="{{ url_for('static', filename='logo_full.png') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
     <style>
         /* WebGL canvas-ийг ар талд ямар нэгэн саадгүйгээр бүтэн дэлгэцээр байрлуулах */
         .webgl {
@@ -118,7 +118,7 @@
     <header class="site-header" id="siteHeader">
         <div class="container nav-container">
             <a href="{{ url_for('home') }}" class="logo">
-                <img src="{{ url_for('static', filename='logo.jpg') }}"
+                <img src="{{ url_for('static', filename='logo.png') }}?v=3"
                      alt="Их Засаг коллеж лого"
                      class="logo-img">
                 <span class="logo-text">
@@ -164,10 +164,13 @@
         <div class="container footer-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 35px; text-align: left; margin-bottom: 30px;">
             <!-- 1. Сургууль -->
             <div>
-                <div class="footer-logo" style="font-size: 18px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 10px;">
-                    ИХ ЗАСАГ ПОЛИТЕХНИК КОЛЛЕЖ
+                <div class="footer-logo" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <img src="{{ url_for('static', filename='logo.png') }}?v=3" alt="Их Засаг коллеж" style="width: 44px; height: 44px; border-radius: 50%; object-fit: contain; background: #ffffff; padding: 2px; border: 2px solid rgba(231,185,94,0.4);">
+                    <div style="font-size: 17px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px;">
+                        ИХ ЗАСАГ ПОЛИТЕХНИК КОЛЛЕЖ
+                    </div>
                 </div>
-                <p style="margin: 0 0 12px; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">
+                <p style="margin: 0 0 12px; color: #cbd5e1; font-size: 14.5px; line-height: 1.7;">
                     Чингис Хааны нэрэмжит Их Засаг Олон Улсын Их Сургуулийн бүрэлдэхүүн сургууль. 2007 оноос хойш хөдөлмөрийн зах зээлийн тэргүүлэх боловсон хүчнийг бэлтгэж байна.
                 </p>
                 <span style="display: inline-block; padding: 4px 10px; background: rgba(231,185,94,0.12); border: 1px solid rgba(231,185,94,0.3); border-radius: 6px; font-size: 12px; color: #f5d995;">
@@ -178,7 +181,7 @@
             <!-- 2. Холбоосууд -->
             <div>
                 <h4 style="color: #ffffff; font-size: 16px; margin: 0 0 14px;">Холбоосууд</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #cfc8ff;">
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: #e2e8f0;">
                     <li><a href="{{ url_for('home') }}" style="color: inherit; text-decoration: none; transition: color 0.2s;">› Нүүр хуудас</a></li>
                     <li><a href="{{ url_for('about') }}" style="color: inherit; text-decoration: none; transition: color 0.2s;">› Бидний тухай & Багш нар</a></li>
                     <li><a href="{{ url_for('students') }}" style="color: inherit; text-decoration: none; transition: color 0.2s;">› Мэргэжлийн хөтөлбөрүүд</a></li>
@@ -191,10 +194,10 @@
             <!-- 3. Холбоо барих -->
             <div>
                 <h4 style="color: #ffffff; font-size: 16px; margin: 0 0 14px;">Холбоо барих</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: #cfc8ff;">
+                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: #f1f5f9;">
                     <div style="display: flex; gap: 10px; align-items: flex-start;">
                         <span style="display:inline-flex; align-items:center; color:#a99fff; margin-top: 3px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-                        <a href="https://maps.google.com/?q=Их+Засаг+Олон+Улсын+Их+Сургууль+Улаанбаатар" target="_blank" rel="noopener" style="color: #cfc8ff; text-decoration: underline;" title="Google Maps дээр нээх">{{ site_settings.address }} ↗</a>
+                        <a href="https://maps.google.com/?q=Их+Засаг+Олон+Улсын+Их+Сургууль+Улаанбаатар" target="_blank" rel="noopener" style="color: #f1f5f9; text-decoration: underline;" title="Google Maps дээр нээх">{{ site_settings.address }} ↗</a>
                     </div>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <span style="display:inline-flex; align-items:center; color:#a99fff;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
@@ -400,7 +403,7 @@
         const ribbonConfigs = [
             { phase: 0.0, amp: 0.9, width: 2.2, length: 16, y: 1.1,  z: -0.5, twist: 0.14, colorA: '#7a70c8', colorB: '#f1eeff' },
             { phase: 2.1, amp: 1.1, width: 2.8, length: 18, y: -0.2, z: 0.4,  twist: 0.11, colorA: '#6c64b8', colorB: '#dcd6ff' },
-            { phase: 4.0, amp: 0.8, width: 2.0, length: 17, y: -1.6, z: -1.2, twist: 0.16, colorA: '#5f58a8', colorB: '#cfc8ff' }
+            { phase: 4.0, amp: 0.8, width: 2.0, length: 17, y: -1.6, z: -1.2, twist: 0.16, colorA: '#5f58a8', colorB: '#f1f5f9' }
         ];
 
         const ribbons = ribbonConfigs.map(cfg => {

@@ -175,6 +175,10 @@
             </label>
         </div>
 
+        <div style="text-align: center; margin-bottom: 16px;">
+            <img src="{{ url_for('static', filename='logo.png') }}?v=3" alt="Их Засаг Политехник Коллеж" style="width: 70px; height: 70px; border-radius: 50%; background: #ffffff; padding: 2px; border: 2px solid #e7b95e; box-shadow: 0 4px 18px rgba(0,0,0,0.5);">
+        </div>
+
         <h2>Login</h2>
 
         {% with messages = get_flashed_messages(category_filter=["error"]) %}

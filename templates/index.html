@@ -10,7 +10,7 @@
         z-index: 2;
     }
     .hero h1 span {
-        background: linear-gradient(90deg, #cfc8ff, #8f84ff);
+        background: linear-gradient(90deg, #f1f5f9, #8f84ff);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -27,7 +27,7 @@
             <a class="btn-primary" href="{{ url_for('apply') }}">Элсэлтийн бүртгэл →</a>
             <a class="btn-secondary" href="{{ url_for('about') }}">Бидний тухай</a>
         </div>
-        <div class="hero-note" style="margin-top: 25px; color: #cfc8ff; font-size: 14px;">
+        <div class="hero-note" style="margin-top: 25px; color: #f1f5f9; font-size: 14px;">
             <span class="note-dot"></span> {{ site_settings.admission_status }}
         </div>
     </div>
@@ -107,7 +107,7 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
         {% for n in news_list %}
-        <div class="news-card" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.16); border-radius: 18px; padding: 20px; backdrop-filter: blur(8px); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; overflow: hidden; cursor: pointer;"
+        <div class="news-card" style="background: rgba(13, 17, 34, 0.90); border: 1px solid rgba(220, 214, 255, 0.22); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45); border-radius: 18px; padding: 20px; backdrop-filter: blur(8px); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; overflow: hidden; cursor: pointer;"
              data-title="{{ n.title }}"
              data-category="{{ n.category }}"
              data-image="{{ n.image or '' }}"
@@ -141,15 +141,15 @@
                         {{ n.created_at[:10] if n.created_at else '' }}
                     </span>
                 </div>
-                <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 17px; line-height: 1.4; font-weight: 700;">
+                <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 19px; line-height: 1.4; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,0.85);">
                     {{ n.title }}
                 </h3>
-                <p style="margin: 0 0 18px; color: #cfc8ff; font-size: 13.5px; line-height: 1.6;">
+                <p style="margin: 0 0 18px; color: #f1f5f9; font-size: 14.5px; line-height: 1.65;">
                     {{ n.summary }}
                 </p>
             </div>
             <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #a99fff; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                <span style="color: #fcd34d; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
                     Дэлгэрэнгүй унших →
                 </span>
             </div>
@@ -210,7 +210,7 @@
         <div style="max-width: 800px;">
             <span class="eyebrow">ИХ ЗАСАГ ЦОГЦОЛБОР</span>
             <h2 style="color: #ffffff; font-size: 28px; margin: 8px 0 14px;">Орчин үеийн сургалтын таатай орчин</h2>
-            <p style="color: #cfc8ff; line-height: 1.8; margin: 0 0 24px; font-size: 15px;">
+            <p style="color: #f1f5f9; line-height: 1.8; margin: 0 0 24px; font-size: 15px;">
                 Манай коллеж нь Улаанбаатар хотын Баянзүрх дүүрэгт байрлах Их Засаг цогцолборт үйл ажиллагаа явуулдаг бөгөөд мэргэжлийн дадлагын лаборатори, номын сан, соёлын төв, спорт заал, оюутны дотуур байраар бүрэн хангагдсан.
             </p>
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px;">
@@ -219,21 +219,21 @@
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v11H9V10z"/></svg>
                     </div>
                     <strong style="color: #ffffff; font-size: 14px;">Төв цогцолбор байр</strong>
-                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Бүх танхим, лаборатори нэг дор</p>
+                    <p style="color: #f1f5f9; font-size: 12px; margin: 2px 0 0;">Бүх танхим, лаборатори нэг дор</p>
                 </div>
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px;">
                     <div style="color: #a99fff; margin-bottom: 6px;">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
                     </div>
                     <strong style="color: #ffffff; font-size: 14px;">МТ Лаборатори</strong>
-                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Орчин үеийн компьютер техник</p>
+                    <p style="color: #f1f5f9; font-size: 12px; margin: 2px 0 0;">Орчин үеийн компьютер техник</p>
                 </div>
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px;">
                     <div style="color: #a99fff; margin-bottom: 6px;">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                     </div>
                     <strong style="color: #ffffff; font-size: 14px;">Дадлагын бааз</strong>
-                    <p style="color: #cfc8ff; font-size: 12px; margin: 2px 0 0;">Стандартын гал тогоо, урлан</p>
+                    <p style="color: #f1f5f9; font-size: 12px; margin: 2px 0 0;">Стандартын гал тогоо, урлан</p>
                 </div>
             </div>
             <div>
@@ -302,19 +302,19 @@
         <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
             <div style="font-size: 32px; font-weight: 800; color: #a99fff; margin-bottom: 12px;">01</div>
             <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Мэргэжлээ сонгох</h3>
-            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Манай 17 мэргэжлийн чиглэлтэй танилцаж, өөрийн хүсэл сонирхолд нийцсэн хөтөлбөрөө сонгоно.</p>
+            <p style="margin: 0; color: #f1f5f9; font-size: 14px; line-height: 1.7;">Манай 17 мэргэжлийн чиглэлтэй танилцаж, өөрийн хүсэл сонирхолд нийцсэн хөтөлбөрөө сонгоно.</p>
         </div>
 
         <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
             <div style="font-size: 32px; font-weight: 800; color: #e7b95e; margin-bottom: 12px;">02</div>
             <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Цахимаар бүртгүүлэх</h3>
-            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Элсэлтийн анкетыг 1 минутад багтаан бөглөж илгээнэ. Элсэлтийн зөвлөх тантай 24 цагийн дотор холбогдоно.</p>
+            <p style="margin: 0; color: #f1f5f9; font-size: 14px; line-height: 1.7;">Элсэлтийн анкетыг 1 минутад багтаан бөглөж илгээнэ. Элсэлтийн зөвлөх тантай 24 цагийн дотор холбогдоно.</p>
         </div>
 
         <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(220, 214, 255, 0.15); border-radius: 16px; padding: 28px; backdrop-filter: blur(8px);">
             <div style="font-size: 32px; font-weight: 800; color: #7a6ff0; margin-bottom: 12px;">03</div>
             <h3 style="margin: 0 0 10px; color: #ffffff; font-size: 18px;">Баталгаажуулж эхлэх</h3>
-            <p style="margin: 0; color: #cfc8ff; font-size: 14px; line-height: 1.7;">Шаардлагатай баримт бичгээ авчран сургалтын гэрээгээ байгуулж, Их Засаг коллежийн оюутан болно.</p>
+            <p style="margin: 0; color: #f1f5f9; font-size: 14px; line-height: 1.7;">Шаардлагатай баримт бичгээ авчран сургалтын гэрээгээ байгуулж, Их Засаг коллежийн оюутан болно.</p>
         </div>
     </div>
 </section>
@@ -341,12 +341,12 @@
             </div>
             {% else %}
             <div style="width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%; border: 2px solid #a99fff; background: linear-gradient(135deg, #322d59, #1b1638); display: flex; align-items: center; justify-content: center;">
-                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cfc8ff" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             {% endif %}
             <h4 style="margin: 0; color: #ffffff; font-size: 17px;">{{ t.name }}</h4>
             <span style="color: #e7b95e; font-weight: 700; font-size: 13px; display: block; margin-top: 4px;">{{ t.role }}</span>
-            <p style="margin: 5px 0 0; font-size: 12px; color: #cfc8ff;">{{ t.degree }}</p>
+            <p style="margin: 5px 0 0; font-size: 12px; color: #f1f5f9;">{{ t.degree }}</p>
         </div>
         {% endfor %}
     </div>
@@ -369,7 +369,7 @@
                 <span>{{ f.question }}</span>
                 <span style="color: #a99fff; font-size: 14px;">›</span>
             </summary>
-            <div style="padding: 0 24px 20px; color: #cfc8ff; font-size: 14.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.06); white-space: pre-line;">{{ f.answer }}</div>
+            <div style="padding: 0 24px 20px; color: #f1f5f9; font-size: 14.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.06); white-space: pre-line;">{{ f.answer }}</div>
         </details>
         {% endfor %}
     </div>
@@ -395,12 +395,12 @@
         <div style="padding: 22px 26px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;">
             <div>
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <span id="ndCategory" style="display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(124, 108, 246, 0.25); color: #cfc8ff; border: 1px solid rgba(124, 108, 246, 0.4);">Зарлал</span>
+                    <span id="ndCategory" style="display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; background: rgba(124, 108, 246, 0.25); color: #f1f5f9; border: 1px solid rgba(124, 108, 246, 0.4);">Зарлал</span>
                     <span id="ndDate" style="color: #94a3b8; font-size: 12px; margin-left: 6px;"></span>
                 </div>
                 <h3 id="ndTitle" style="margin: 0; font-size: 20px; color: #ffffff; line-height: 1.4; font-weight: 700;"></h3>
             </div>
-            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); color: #cfc8ff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" aria-label="Хаах">×</button>
+            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); color: #f1f5f9; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" aria-label="Хаах">×</button>
         </div>
         <div style="padding: 22px 26px; overflow-y: auto; flex: 1;">
             <div id="ndImageBox" style="display: none; width: 100%; max-height: 300px; overflow: hidden; border-radius: 12px; margin-bottom: 18px; background: rgba(0,0,0,0.3);">
@@ -410,7 +410,7 @@
         </div>
         <div style="padding: 14px 26px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; background: rgba(8, 12, 24, 0.75);">
             <a href="{{ url_for('apply') }}" class="btn-primary" style="padding: 8px 18px; font-size: 13.5px;">Элсэлтийн бүртгэл →</a>
-            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); color: #cfc8ff; border: 1px solid rgba(255, 255, 255, 0.18); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13.5px;">Хаах</button>
+            <button type="button" onclick="closeNewsDetail()" style="background: rgba(255, 255, 255, 0.06); color: #f1f5f9; border: 1px solid rgba(255, 255, 255, 0.18); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13.5px;">Хаах</button>
         </div>
     </div>
 </div>
