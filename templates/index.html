@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Нүүр | Их Засаг Политехник Коллеж{% endblock %}
 
@@ -9,12 +9,7 @@
         position: relative;
         z-index: 2;
     }
-    .hero h1 span {
-        background: linear-gradient(90deg, #f1f5f9, #8f84ff);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
+    .hero h1 span { color: #ffffff !important; background: none !important; -webkit-background-clip: unset !important; -webkit-text-fill-color: #ffffff !important; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95); }
 </style>
 
 <!-- HERO -->
@@ -70,27 +65,54 @@
 
     <div class="major-grid">
         {% for m in featured_majors %}
-        <a class="major-card" href="{{ url_for('apply') }}?major={{ m.name | urlencode }}">
-            <div class="major-icon" style="color: #a99fff; margin-bottom: 12px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(169, 159, 255, 0.12); border: 1px solid rgba(169, 159, 255, 0.3);">
-                {% if m.category == 'design' %}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-                {% elif m.category == 'tech' %}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-                {% elif m.category == 'health' %}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                {% elif m.category == 'business' %}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
-                {% else %}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg>
-                {% endif %}
+        <div class="major-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div class="major-icon" style="color: #a99fff; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(169, 159, 255, 0.12); border: 1px solid rgba(169, 159, 255, 0.3);">
+                        {% if m.category == 'design' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                        {% elif m.category == 'tech' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                        {% elif m.category == 'health' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        {% elif m.category == 'business' %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+                        {% else %}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg>
+                        {% endif %}
+                    </div>
+                    <span style="background: rgba(231,185,94,0.18); color: #fcd34d; border: 1px solid rgba(231,185,94,0.45); font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 700;">{{ m.stipend }}</span>
+                </div>
+                <h3 style="font-size: 19px; font-weight: 800; color: #ffffff; margin-bottom: 6px;">{{ m.name }}</h3>
+                <p style="font-size: 14px; font-weight: 700; color: #fcd34d; margin-bottom: 8px;">Суралцах хугацаа: {{ m.duration }} · {{ m.base_edu }} суурьтай</p>
+                <p style="font-size: 14px; color: #f1f5f9; line-height: 1.6; margin-bottom: 12px;"><strong style="color: #cbd5e1; display: block; font-size: 12px; margin-bottom: 3px; text-transform: uppercase;">Гүйцэтгэх ажил:</strong>{{ m.description }}</p>
             </div>
-            <h3>{{ m.name }}</h3>
-            <p>Суралцах хугацаа: {{ m.duration }} · {{ m.base_edu }}</p>
-            <div style="margin-bottom: 10px;">
-                <span style="background: rgba(231,185,94,0.12); color: #f5d995; border: 1px solid rgba(231,185,94,0.3); font-size: 11px; padding: 2px 8px; border-radius: 4px;">{{ m.stipend }}</span>
+            <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;">
+                <button type="button" onclick="openMajorModal(this)"
+                        data-name="{{ m.name }}"
+                        data-category="{{ m.category_label or m.category }}"
+                        data-duration="{{ m.duration }}"
+                        data-base-edu="{{ m.base_edu }}"
+                        data-stipend="{{ m.stipend }}"
+                        data-diploma="{{ m.diploma or 'Техникийн боловсролын диплом + Бүрэн дунд боловсролын үнэмлэх' }}"
+                        data-pathway="{{ m.pathway or 'Их Засаг ОУИС-ийн бакалаврын 2-р дамжаанд шууд шатлан суралцах эрхтэй' }}"
+                        data-description="{{ m.description }}"
+                        data-career="{{ m.career or 'Мэргэжлийн чиглэлээр холбогдох салбаруудад' }}"
+                        data-connections="{{ m.connections }}"
+                        data-foundation="{{ m.foundation }}"
+                        data-apply-url="{{ url_for('apply') }}?major={{ m.name | urlencode }}"
+                        style="background: rgba(124, 108, 246, 0.2); border: 1px solid rgba(196, 181, 253, 0.5); color: #ffffff; padding: 7px 14px; border-radius: 50px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;"
+                        onmouseover="this.style.background='#7c6cf6'; this.style.borderColor='#7c6cf6';"
+                        onmouseout="this.style.background='rgba(124, 108, 246, 0.2)'; this.style.borderColor='rgba(196, 181, 253, 0.5)';">
+                    Дэлгэрэнгүй
+                </button>
+                <a href="{{ url_for('apply') }}?major={{ m.name | urlencode }}" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f19; padding: 7px 16px; border-radius: 50px; font-weight: 800; font-size: 13px; text-decoration: none; transition: transform 0.2s;"
+                   onmouseover="this.style.transform='scale(1.05)';"
+                   onmouseout="this.style.transform='none';">
+                    Элсэх →
+                </a>
             </div>
-            <span class="card-link">Сонгох →</span>
-        </a>
+        </div>
         {% endfor %}
     </div>
 </section>

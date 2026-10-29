@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Мэргэжлүүд | Их Засаг Политехник Коллеж{% endblock %}
 
@@ -35,7 +35,7 @@
 
     <div class="major-grid" id="majorGrid">
         {% for m in majors %}
-        <a class="major-card" href="{{ url_for('apply') }}?major={{ m.name | urlencode }}" data-cat="{{ m.category }}" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="major-card" data-cat="{{ m.category }}" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                     <div class="major-icon" style="color: #a99fff; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(169, 159, 255, 0.12); border: 1px solid rgba(169, 159, 255, 0.3);">
@@ -51,24 +51,48 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v19"/><path d="M5 2v7a4 4 0 0 0 4 4v8"/><path d="M5 2h4"/></svg>
                         {% endif %}
                     </div>
-                    <span style="background: rgba(231,185,94,0.12); color: #f5d995; border: 1px solid rgba(231,185,94,0.3); font-size: 12.5px; padding: 4px 10px; border-radius: 6px; font-weight: 700;">{{ m.stipend }}</span>
+                    <span style="background: rgba(231,185,94,0.18); color: #fcd34d; border: 1px solid rgba(231,185,94,0.45); font-size: 12.5px; padding: 4px 10px; border-radius: 6px; font-weight: 700;">{{ m.stipend }}</span>
                 </div>
 
-                <h3>{{ m.name }}</h3>
+                <h3 style="font-size: 19.5px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">{{ m.name }}</h3>
                 <p style="margin-bottom: 8px; font-size: 15px; font-weight: 700; color: #fcd34d;">Хугацаа: {{ m.duration }} · {{ m.base_edu }} суурьтай</p>
-                <p style="font-size: 14.5px; color: #f1f5f9; line-height: 1.65; margin-bottom: 12px;">{{ m.description }}</p>
+                <p style="font-size: 14.5px; color: #f1f5f9; line-height: 1.65; margin-bottom: 12px;"><strong style="color: #cbd5e1; display: block; font-size: 12px; margin-bottom: 3px; text-transform: uppercase;">Гүйцэтгэх гол ажил:</strong>{{ m.description }}</p>
                 {% if m.career %}
-                <div style="font-size: 13.5px; color: #e2e8f0; margin-bottom: 12px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 9px;">
-                    <strong style="color: #c4b5fd; font-weight: 700;">Ажлын байр:</strong> {{ m.career }}
+                <div style="font-size: 13.5px; color: #e2e8f0; margin-bottom: 14px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 9px;">
+                    <strong style="color: #38bdf8; font-weight: 700;">Төгсөөд ажиллах:</strong> {{ m.career }}
                 </div>
                 {% endif %}
             </div>
 
-            <div class="major-meta" style="margin-top: auto;">
+            <div class="major-meta" style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;">
                 <span class="major-badge">{{ m.category_label }}</span>
-                <span class="card-link">Бүртгүүлэх →</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button type="button" onclick="openMajorModal(this)"
+                            data-name="{{ m.name }}"
+                            data-category="{{ m.category_label }}"
+                            data-duration="{{ m.duration }}"
+                            data-base-edu="{{ m.base_edu }}"
+                            data-stipend="{{ m.stipend }}"
+                            data-diploma="{{ m.diploma or 'Техникийн боловсролын диплом + Бүрэн дунд боловсролын үнэмлэх' }}"
+                            data-pathway="{{ m.pathway or 'Их Засаг ОУИС-ийн бакалаврын 2-р дамжаанд шууд шатлан суралцах эрхтэй' }}"
+                            data-description="{{ m.description }}"
+                            data-career="{{ m.career or 'Мэргэжлийн чиглэлээр холбогдох салбаруудад' }}"
+                            data-connections="{{ m.connections }}"
+                            data-foundation="{{ m.foundation }}"
+                            data-apply-url="{{ url_for('apply') }}?major={{ m.name | urlencode }}"
+                            style="background: rgba(124, 108, 246, 0.2); border: 1px solid rgba(196, 181, 253, 0.5); color: #ffffff; padding: 7px 15px; border-radius: 50px; font-weight: 700; font-size: 13.5px; cursor: pointer; transition: 0.2s;"
+                            onmouseover="this.style.background='#7c6cf6'; this.style.borderColor='#7c6cf6';"
+                            onmouseout="this.style.background='rgba(124, 108, 246, 0.2)'; this.style.borderColor='rgba(196, 181, 253, 0.5)';">
+                        Дэлгэрэнгүй
+                    </button>
+                    <a href="{{ url_for('apply') }}?major={{ m.name | urlencode }}" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f19; padding: 7px 16px; border-radius: 50px; font-weight: 800; font-size: 13.5px; text-decoration: none; transition: transform 0.2s;"
+                       onmouseover="this.style.transform='scale(1.05)';"
+                       onmouseout="this.style.transform='none';">
+                        Элсэх →
+                    </a>
+                </div>
             </div>
-        </a>
+        </div>
         {% endfor %}
     </div>
 </section>

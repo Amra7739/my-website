@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <meta property="og:title" content="Их Засаг Политехник Коллеж">
     <meta property="og:description" content="Мэргэжлийн боловсрол · Шинэ боломж · Шинэ ирээдүй. Элсэлтийн бүртгэл явагдаж байна.">
     <meta property="og:image" content="{{ url_for('static', filename='logo_full.png') }}?v=3">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=5">
     <style>
         /* WebGL canvas-ийг ар талд ямар нэгэн саадгүйгээр бүтэн дэлгэцээр байрлуулах */
         .webgl {
@@ -528,6 +528,166 @@
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    </script>
+
+    <!-- МЭРГЭЖЛИЙН ДЭЛГЭРЭНГҮЙ ТАНИЛЦУУЛГЫН МОДАЛ ЦОНХ -->
+    <div id="majorDetailModal" style="display: none; position: fixed; inset: 0; background: rgba(5, 7, 18, 0.88); backdrop-filter: blur(14px); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #0f172a; border: 1px solid rgba(220, 214, 255, 0.28); border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative; padding: 32px; box-sizing: border-box;">
+            
+            <!-- Хаах товч -->
+            <button type="button" onclick="closeMajorModal()" style="position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(239,68,68,0.3)'; this.style.color='#f87171';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#ffffff';">✕</button>
+
+            <!-- Толгой хэсэг -->
+            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 22px; padding-right: 40px;">
+                <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(124, 108, 246, 0.2); border: 1px solid rgba(179, 168, 255, 0.4); display: flex; align-items: center; justify-content: center; color: #fcd34d; flex-shrink: 0;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <div>
+                    <span id="mdm_category" style="display: inline-block; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 20px; background: rgba(124, 108, 246, 0.25); color: #c4b5fd; border: 1px solid rgba(124, 108, 246, 0.4); margin-bottom: 5px;">ЧИГЛЭЛ</span>
+                    <h3 id="mdm_title" style="margin: 0; font-size: 23px; font-weight: 900; color: #ffffff; line-height: 1.3;">Мэргэжлийн нэр</h3>
+                </div>
+            </div>
+
+            <!-- 4 Үзүүлэлтийн Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 22px;">
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 14px;">
+                    <span style="display: block; font-size: 11.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Суралцах хугацаа</span>
+                    <strong id="mdm_duration" style="font-size: 15px; color: #fcd34d; display: block; margin-top: 4px;">3 жил</strong>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 14px;">
+                    <span style="display: block; font-size: 11.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Элсэх суурь</span>
+                    <strong id="mdm_base_edu" style="font-size: 15px; color: #ffffff; display: block; margin-top: 4px;">9-р анги</strong>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 14px;">
+                    <span style="display: block; font-size: 11.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Сар бүрийн тэтгэлэг</span>
+                    <strong id="mdm_stipend" style="font-size: 15px; color: #34d399; display: block; margin-top: 4px;">200,000₮</strong>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 14px;">
+                    <span style="display: block; font-size: 11.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Олгох диплом</span>
+                    <strong id="mdm_diploma" style="font-size: 13.5px; color: #c4b5fd; display: block; margin-top: 4px;">Техникийн диплом</strong>
+                </div>
+            </div>
+
+            <!-- Энэ мэргэжлээр юу хийж, юу суралцах вэ? -->
+            <div style="margin-bottom: 20px;">
+                <h4 style="margin: 0 0 8px; font-size: 14.5px; font-weight: 800; color: #fcd34d; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #fcd34d;"></span>
+                    Энэ мэргэжлээр юу хийж, юу суралцах вэ? (Гүйцэтгэх гол ажлууд):
+                </h4>
+                <p id="mdm_description" style="margin: 0; color: #ffffff; font-size: 15px; line-height: 1.75; font-weight: 400; background: rgba(255,255,255,0.04); padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);"></p>
+            </div>
+
+            <!-- Төгсөөд ажиллах ажлын байр -->
+            <div id="mdm_career_box" style="margin-bottom: 20px;">
+                <h4 style="margin: 0 0 8px; font-size: 14.5px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #38bdf8;"></span>
+                    Төгсөөд ажиллах ажлын байр, албан тушаал:
+                </h4>
+                <div id="mdm_career" style="color: #ffffff; font-size: 14.5px; line-height: 1.6; background: rgba(56,189,248,0.08); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.25);"></div>
+            </div>
+
+            <!-- Өөр мэргэжлүүдтэй холбогдох ба хөрвөн ажиллах суурь боломж -->
+            <div id="mdm_connections_box" style="margin-bottom: 22px; background: rgba(124, 108, 246, 0.08); border: 1px solid rgba(179, 168, 255, 0.3); border-radius: 14px; padding: 18px 20px;">
+                <h4 style="margin: 0 0 12px; font-size: 14.5px; font-weight: 800; color: #c4b5fd; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/><path d="M18 8l4 4-4 4"/><path d="M8 12h14"/></svg>
+                    Өөр мэргэжлүүдтэй холбогдох ба хөрвөн ажиллах суурь:
+                </h4>
+                
+                <div style="margin-bottom: 12px;">
+                    <span style="font-size: 12px; color: #cbd5e1; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 4px;">Хамтран ажиллах холбоотой мэргэжлүүд:</span>
+                    <div id="mdm_connections" style="color: #ffffff; font-size: 14.5px; line-height: 1.6; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"></div>
+                </div>
+
+                <div>
+                    <span style="font-size: 12px; color: #fcd34d; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 4px;">Өөр чиглэлээр ажиллах ба цаашдын өсөлтийн суурь:</span>
+                    <div id="mdm_foundation" style="color: #ffffff; font-size: 14.5px; line-height: 1.6; background: rgba(252,211,77,0.06); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(252,211,77,0.25);"></div>
+                </div>
+            </div>
+
+            <!-- Шатлан суралцах эрх -->
+            <div style="margin-bottom: 26px; background: rgba(124, 108, 246, 0.1); padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(124, 108, 246, 0.3); display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(124, 108, 246, 0.25); display: flex; align-items: center; justify-content: center; color: #c4b5fd; flex-shrink: 0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <div>
+                    <strong style="color: #c4b5fd; font-size: 14px; display: block;">Их Засаг ОУИС-д 2-р курст шатлан суралцах эрх</strong>
+                    <p id="mdm_pathway" style="margin: 3px 0 0; color: #e2e8f0; font-size: 13.5px; line-height: 1.5;">Их Засаг Олон Улсын Их Сургуулийн холбогдох бакалаврын хөтөлбөрийн 2-р дамжаанд шууд дэвшин суралцах боломжтой.</p>
+                </div>
+            </div>
+
+            <!-- Товчлуурууд -->
+            <div style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
+                <button type="button" onclick="closeMajorModal()" style="padding: 12px 24px; border-radius: 50px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-size: 14.5px; font-weight: 700; cursor: pointer;">Хаах</button>
+                <a id="mdm_apply_btn" href="#" style="padding: 12px 30px; border-radius: 50px; background: linear-gradient(135deg, #7c6cf6, #5b4fd6); color: #ffffff; font-size: 15px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 6px 20px rgba(124,108,246,0.5);">Энэ мэргэжлээр бүртгүүлэх →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Мэргэжлийн модал удирдах скрипт -->
+    <script>
+    function openMajorModal(btn) {
+        const name = btn.getAttribute('data-name') || '';
+        const category = btn.getAttribute('data-category') || '';
+        const duration = btn.getAttribute('data-duration') || '';
+        const baseEdu = btn.getAttribute('data-base-edu') || '';
+        const stipend = btn.getAttribute('data-stipend') || '';
+        const diploma = btn.getAttribute('data-diploma') || 'Техникийн боловсролын диплом + Бүрэн дунд боловсролын үнэмлэх';
+        const pathway = btn.getAttribute('data-pathway') || 'Их Засаг ОУИС-ийн бакалаврын 2-р дамжаанд шууд шатлан суралцах эрхтэй';
+        const description = btn.getAttribute('data-description') || '';
+        const career = btn.getAttribute('data-career') || '';
+        const connections = btn.getAttribute('data-connections') || '';
+        const foundation = btn.getAttribute('data-foundation') || '';
+        const applyUrl = btn.getAttribute('data-apply-url') || '/apply';
+
+        document.getElementById('mdm_title').innerText = name;
+        document.getElementById('mdm_category').innerText = category;
+        document.getElementById('mdm_duration').innerText = duration;
+        document.getElementById('mdm_base_edu').innerText = baseEdu;
+        document.getElementById('mdm_stipend').innerText = stipend;
+        document.getElementById('mdm_diploma').innerText = diploma;
+        document.getElementById('mdm_description').innerText = description;
+        document.getElementById('mdm_pathway').innerText = pathway;
+        
+        const careerBox = document.getElementById('mdm_career_box');
+        const careerEl = document.getElementById('mdm_career');
+        if (career && career.trim()) {
+            careerEl.innerText = career;
+            careerBox.style.display = 'block';
+        } else {
+            careerBox.style.display = 'none';
+        }
+
+        const connectionsBox = document.getElementById('mdm_connections_box');
+        const connectionsEl = document.getElementById('mdm_connections');
+        const foundationEl = document.getElementById('mdm_foundation');
+        if (connections || foundation) {
+            if (connectionsEl) connectionsEl.innerText = connections;
+            if (foundationEl) foundationEl.innerText = foundation;
+            if (connectionsBox) connectionsBox.style.display = 'block';
+        } else {
+            if (connectionsBox) connectionsBox.style.display = 'none';
+        }
+
+        const applyBtn = document.getElementById('mdm_apply_btn');
+        applyBtn.href = applyUrl;
+
+        const modal = document.getElementById('majorDetailModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMajorModal() {
+        const modal = document.getElementById('majorDetailModal');
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('majorDetailModal');
+        if (e.target === modal) {
+            closeMajorModal();
+        }
+    });
     </script>
     {% block modal %}{% endblock %}
     {% block scripts %}{% endblock %}
